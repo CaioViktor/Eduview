@@ -11,6 +11,28 @@ from flask import Flask, jsonify, url_for, redirect, request, send_from_director
 from flask_restful import Resource, Api
 from bson.objectid import ObjectId
 
+from math import radians, cos, sin, asin, sqrt
+
+
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    km = 6367 * c
+    return km
+    
+def getKey(item):
+		return item[0]
+   
+
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 api = Api(app)
@@ -107,14 +129,41 @@ class escola(Resource):
 		closeCursor(cursor)
 		return resultado
 		
-class listEscola(Resource):
-	def get(self,posicao,raio,limit,deslocamento):
-
-		return		
-			
+class listEscola(Resource):	
+	def get(self,longitude,latitude,raio,maximo):
+		cursor = getCursor()
+		sql = 'SELECT * FROM public."Escola" WHERE latitude IS NOT NULL AND longitude IS NOT NULL '
+		cursor.execute(sql)
+		contador = 0
+		resultado = {'contador':0}
+		itens = []
+		for linha in cursor:
+			escola = getEscola(linha)
+			long1 = float(str(escola['longitude']).replace(",","."))
+			lat1 = float(str(escola['latitude']).replace(",","."))
+			long2 = float(str(longitude).replace(",","."))
+			lat2 = float(str(latitude).replace(",","."))
+			distancia  = haversine(long1,lat1,long2,lat2)
+			raio = float(str(raio).replace(",","."))
+			if (distancia <= raio):
+				elemento = [distancia,escola]
+				itens.append(elemento)
+		sorted(itens,key=getKey)
+		for item in itens:
+			escola = item[1]
+			contador+=1
+			resultado['contador'] = contador
+			resultado[contador] = escola
+			if(contador >= maximo):
+				closeCursor(cursor)
+				return resultado
+				
+		closeCursor(cursor)
+		return resultado	
+		
 
 api.add_resource(escola,'/escola/<string:campo>/<string:comparador>/<string:valor>/<string:deslocamento>',endpoint='escola_endpoint')
-#api.add_resource(escola,'/escola/<string:campo>/<string:comparador>/<string:valor>/<string:deslocamento>',endpoint='escola_endpoint')
+api.add_resource(listEscola,'/listescola/<string:longitude>/<string:latitude>/<string:raio>/<int:maximo>',endpoint='listEscola_endpoint')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
