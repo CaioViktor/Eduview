@@ -113,12 +113,19 @@ def getEscola(cursor):
 	resultado['cep'] = cursor[29]
 	resultado['latitude'] = cursor[30]
 	resultado['longitude'] = cursor[31]
+	resultado['avaliacao'] = str(cursor[32])
 	return resultado
 	
 class escola(Resource):
 	def get(self,campo,comparador,valor,deslocamento):
+		valor = "'"+valor+"'"
+		campo = 'e.'+campo
+		if(comparador.lower() == 'like'):
+			campo = 'UPPER('+campo+')'
+			valor = 'UPPER('+valor+')'
 		cursor = getCursor()
-		sql = 'SELECT * FROM public."Escola" WHERE ' + campo + " " +comparador + " '" +valor+"' ORDER BY nome LIMIT 10 OFFSET " + deslocamento
+		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola WHERE ' + campo + " " +comparador + " " +valor+" GROUP BY  e.pk_escola ORDER BY e.pk_escola LIMIT 10 OFFSET " + deslocamento
+		print sql
 		cursor.execute(sql)
 		contador = 0
 		resultado = {'contador':0}
@@ -132,7 +139,7 @@ class escola(Resource):
 class listEscola(Resource):	
 	def get(self,longitude,latitude,raio,maximo):
 		cursor = getCursor()
-		sql = 'SELECT * FROM public."Escola" WHERE latitude IS NOT NULL AND longitude IS NOT NULL '
+		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola WHERE latitude IS NOT NULL AND longitude IS NOT NULL GROUP BY e.pk_escola'
 		cursor.execute(sql)
 		contador = 0
 		resultado = {'contador':0}

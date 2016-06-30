@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.3
 -- Dumped by pg_dump version 9.5.3
 
--- Started on 2016-06-28 11:46:35 BRT
+-- Started on 2016-06-30 18:31:49 BRT
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -24,7 +24,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2183 (class 0 OID 0)
+-- TOC entry 2169 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -40,26 +40,27 @@ SET default_with_oids = false;
 
 --
 -- TOC entry 185 (class 1259 OID 16601)
--- Name: Comentario; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Avaliacao; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE "Comentario" (
+CREATE TABLE "Avaliacao" (
     id_escola integer NOT NULL,
     id_usuario integer NOT NULL,
     texto character varying(256),
-    data date
+    data date,
+    avaliacao integer
 );
 
 
-ALTER TABLE "Comentario" OWNER TO postgres;
+ALTER TABLE "Avaliacao" OWNER TO postgres;
 
 --
--- TOC entry 2184 (class 0 OID 0)
+-- TOC entry 2170 (class 0 OID 0)
 -- Dependencies: 185
--- Name: COLUMN "Comentario".id_escola; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN "Avaliacao".id_escola; Type: COMMENT; Schema: public; Owner: postgres
 --
 
-COMMENT ON COLUMN "Comentario".id_escola IS 'pk_escola';
+COMMENT ON COLUMN "Avaliacao".id_escola IS 'pk_escola';
 
 
 --
@@ -106,7 +107,7 @@ CREATE TABLE "Escola" (
 ALTER TABLE "Escola" OWNER TO postgres;
 
 --
--- TOC entry 2185 (class 0 OID 0)
+-- TOC entry 2171 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".nome; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -115,7 +116,7 @@ COMMENT ON COLUMN "Escola".nome IS 'nome da escola';
 
 
 --
--- TOC entry 2186 (class 0 OID 0)
+-- TOC entry 2172 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".rua; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -124,7 +125,7 @@ COMMENT ON COLUMN "Escola".rua IS 'rua do endereço';
 
 
 --
--- TOC entry 2187 (class 0 OID 0)
+-- TOC entry 2173 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".bairro; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -133,7 +134,7 @@ COMMENT ON COLUMN "Escola".bairro IS 'bairro do endereço';
 
 
 --
--- TOC entry 2188 (class 0 OID 0)
+-- TOC entry 2174 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".numero; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -142,7 +143,7 @@ COMMENT ON COLUMN "Escola".numero IS 'número do endereço';
 
 
 --
--- TOC entry 2189 (class 0 OID 0)
+-- TOC entry 2175 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".ddd; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -151,7 +152,7 @@ COMMENT ON COLUMN "Escola".ddd IS 'DD do telefone';
 
 
 --
--- TOC entry 2190 (class 0 OID 0)
+-- TOC entry 2176 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".telefone; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -160,7 +161,7 @@ COMMENT ON COLUMN "Escola".telefone IS 'número do telefone';
 
 
 --
--- TOC entry 2191 (class 0 OID 0)
+-- TOC entry 2177 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".email; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -169,7 +170,7 @@ COMMENT ON COLUMN "Escola".email IS 'email de contato da escola';
 
 
 --
--- TOC entry 2192 (class 0 OID 0)
+-- TOC entry 2178 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".situacao; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -178,7 +179,7 @@ COMMENT ON COLUMN "Escola".situacao IS 'se a escola está operando';
 
 
 --
--- TOC entry 2193 (class 0 OID 0)
+-- TOC entry 2179 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".predio_proprio; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -187,7 +188,7 @@ COMMENT ON COLUMN "Escola".predio_proprio IS 'se a escola opera em prédio próp
 
 
 --
--- TOC entry 2194 (class 0 OID 0)
+-- TOC entry 2180 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".acessibilidade; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -196,7 +197,7 @@ COMMENT ON COLUMN "Escola".acessibilidade IS 'acessível a deficientes';
 
 
 --
--- TOC entry 2195 (class 0 OID 0)
+-- TOC entry 2181 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".rede; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -205,7 +206,7 @@ COMMENT ON COLUMN "Escola".rede IS 'se a escola é pública ou privada';
 
 
 --
--- TOC entry 2196 (class 0 OID 0)
+-- TOC entry 2182 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".atendimento_especializado; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -214,7 +215,7 @@ COMMENT ON COLUMN "Escola".atendimento_especializado IS 'atende pessoas com nece
 
 
 --
--- TOC entry 2197 (class 0 OID 0)
+-- TOC entry 2183 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".refeitorio; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -223,7 +224,7 @@ COMMENT ON COLUMN "Escola".refeitorio IS 'possui refeitorio';
 
 
 --
--- TOC entry 2198 (class 0 OID 0)
+-- TOC entry 2184 (class 0 OID 0)
 -- Dependencies: 181
 -- Name: COLUMN "Escola".cep; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -247,57 +248,12 @@ CREATE SEQUENCE "Escola_pk_escola_seq"
 ALTER TABLE "Escola_pk_escola_seq" OWNER TO postgres;
 
 --
--- TOC entry 2199 (class 0 OID 0)
+-- TOC entry 2185 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: Escola_pk_escola_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Escola_pk_escola_seq" OWNED BY "Escola".pk_escola;
-
-
---
--- TOC entry 187 (class 1259 OID 16618)
--- Name: Sugestao; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE "Sugestao" (
-    id_sugestao integer NOT NULL,
-    id_usuario integer,
-    id_escola integer,
-    valor character varying(256),
-    campo character varying(256),
-    data date,
-    avaliacao integer
-);
-
-
-ALTER TABLE "Sugestao" OWNER TO postgres;
-
---
--- TOC entry 2200 (class 0 OID 0)
--- Dependencies: 187
--- Name: TABLE "Sugestao"; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE "Sugestao" IS 'sugestão feita por um usuário para alteração de dados de uma tabela.';
-
-
---
--- TOC entry 2201 (class 0 OID 0)
--- Dependencies: 187
--- Name: COLUMN "Sugestao".valor; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN "Sugestao".valor IS 'valor sugerido para o campo';
-
-
---
--- TOC entry 2202 (class 0 OID 0)
--- Dependencies: 187
--- Name: COLUMN "Sugestao".campo; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN "Sugestao".campo IS 'Campo do valor sugerido';
 
 
 --
@@ -317,7 +273,7 @@ CREATE TABLE "Usuario" (
 ALTER TABLE "Usuario" OWNER TO postgres;
 
 --
--- TOC entry 2203 (class 0 OID 0)
+-- TOC entry 2186 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: COLUMN "Usuario".id_usuario; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -326,7 +282,7 @@ COMMENT ON COLUMN "Usuario".id_usuario IS 'pk_usuario';
 
 
 --
--- TOC entry 2204 (class 0 OID 0)
+-- TOC entry 2187 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: COLUMN "Usuario".password; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -350,7 +306,7 @@ CREATE SEQUENCE "Usuario_id_usuario_seq"
 ALTER TABLE "Usuario_id_usuario_seq" OWNER TO postgres;
 
 --
--- TOC entry 2205 (class 0 OID 0)
+-- TOC entry 2188 (class 0 OID 0)
 -- Dependencies: 183
 -- Name: Usuario_id_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -359,31 +315,7 @@ ALTER SEQUENCE "Usuario_id_usuario_seq" OWNED BY "Usuario".id_usuario;
 
 
 --
--- TOC entry 186 (class 1259 OID 16616)
--- Name: sugestão_id_sugestao_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE "sugestão_id_sugestao_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE "sugestão_id_sugestao_seq" OWNER TO postgres;
-
---
--- TOC entry 2206 (class 0 OID 0)
--- Dependencies: 186
--- Name: sugestão_id_sugestao_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE "sugestão_id_sugestao_seq" OWNED BY "Sugestao".id_sugestao;
-
-
---
--- TOC entry 2040 (class 2604 OID 16406)
+-- TOC entry 2033 (class 2604 OID 16406)
 -- Name: pk_escola; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -391,15 +323,7 @@ ALTER TABLE ONLY "Escola" ALTER COLUMN pk_escola SET DEFAULT nextval('"Escola_pk
 
 
 --
--- TOC entry 2042 (class 2604 OID 16621)
--- Name: id_sugestao; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY "Sugestao" ALTER COLUMN id_sugestao SET DEFAULT nextval('"sugestão_id_sugestao_seq"'::regclass);
-
-
---
--- TOC entry 2041 (class 2604 OID 16595)
+-- TOC entry 2034 (class 2604 OID 16595)
 -- Name: id_usuario; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -407,17 +331,19 @@ ALTER TABLE ONLY "Usuario" ALTER COLUMN id_usuario SET DEFAULT nextval('"Usuario
 
 
 --
--- TOC entry 2173 (class 0 OID 16601)
+-- TOC entry 2161 (class 0 OID 16601)
 -- Dependencies: 185
--- Data for Name: Comentario; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Avaliacao; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "Comentario" (id_escola, id_usuario, texto, data) FROM stdin;
+COPY "Avaliacao" (id_escola, id_usuario, texto, data, avaliacao) FROM stdin;
+9000	1	goif	2016-10-12	5
+9000	2	goif	2016-10-12	7
 \.
 
 
 --
--- TOC entry 2169 (class 0 OID 16394)
+-- TOC entry 2157 (class 0 OID 16394)
 -- Dependencies: 181
 -- Data for Name: Escola; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -2439,7 +2365,7 @@ RISQUE RABISQUE CRECHE ESCOLA	RUA GILBERTO CAMARA	ELLERY	620	85	32351618	\N	Em A
 
 
 --
--- TOC entry 2207 (class 0 OID 0)
+-- TOC entry 2189 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: Escola_pk_escola_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -2448,55 +2374,37 @@ SELECT pg_catalog.setval('"Escola_pk_escola_seq"', 10062, true);
 
 
 --
--- TOC entry 2175 (class 0 OID 16618)
--- Dependencies: 187
--- Data for Name: Sugestao; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY "Sugestao" (id_sugestao, id_usuario, id_escola, valor, campo, data, avaliacao) FROM stdin;
-\.
-
-
---
--- TOC entry 2172 (class 0 OID 16592)
+-- TOC entry 2160 (class 0 OID 16592)
 -- Dependencies: 184
 -- Data for Name: Usuario; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY "Usuario" (id_usuario, username, password, nome, email) FROM stdin;
 1	caio	12345	caio viktor	caioviktor@hotmail.com
+2	teste	123	teste	teste@teste.com
 \.
 
 
 --
--- TOC entry 2208 (class 0 OID 0)
+-- TOC entry 2190 (class 0 OID 0)
 -- Dependencies: 183
 -- Name: Usuario_id_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"Usuario_id_usuario_seq"', 1, true);
+SELECT pg_catalog.setval('"Usuario_id_usuario_seq"', 2, true);
 
 
 --
--- TOC entry 2209 (class 0 OID 0)
--- Dependencies: 186
--- Name: sugestão_id_sugestao_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"sugestão_id_sugestao_seq"', 1, false);
-
-
---
--- TOC entry 2048 (class 2606 OID 16605)
+-- TOC entry 2040 (class 2606 OID 16605)
 -- Name: pk_comentario; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY "Comentario"
+ALTER TABLE ONLY "Avaliacao"
     ADD CONSTRAINT pk_comentario PRIMARY KEY (id_escola, id_usuario);
 
 
 --
--- TOC entry 2044 (class 2606 OID 16415)
+-- TOC entry 2036 (class 2606 OID 16415)
 -- Name: pk_escola; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2505,16 +2413,7 @@ ALTER TABLE ONLY "Escola"
 
 
 --
--- TOC entry 2050 (class 2606 OID 16623)
--- Name: pk_sugestao; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY "Sugestao"
-    ADD CONSTRAINT pk_sugestao PRIMARY KEY (id_sugestao);
-
-
---
--- TOC entry 2046 (class 2606 OID 16600)
+-- TOC entry 2038 (class 2606 OID 16600)
 -- Name: pk_usuario; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2523,43 +2422,25 @@ ALTER TABLE ONLY "Usuario"
 
 
 --
--- TOC entry 2052 (class 2606 OID 16611)
+-- TOC entry 2042 (class 2606 OID 16611)
 -- Name: fk_escola; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY "Comentario"
+ALTER TABLE ONLY "Avaliacao"
     ADD CONSTRAINT fk_escola FOREIGN KEY (id_escola) REFERENCES "Escola"(pk_escola);
 
 
 --
--- TOC entry 2054 (class 2606 OID 16629)
--- Name: fk_escola; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY "Sugestao"
-    ADD CONSTRAINT fk_escola FOREIGN KEY (id_escola) REFERENCES "Escola"(pk_escola);
-
-
---
--- TOC entry 2051 (class 2606 OID 16606)
+-- TOC entry 2041 (class 2606 OID 16606)
 -- Name: fk_usuario; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY "Comentario"
+ALTER TABLE ONLY "Avaliacao"
     ADD CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES "Usuario"(id_usuario);
 
 
 --
--- TOC entry 2053 (class 2606 OID 16624)
--- Name: fk_usuario; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY "Sugestao"
-    ADD CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES "Usuario"(id_usuario);
-
-
---
--- TOC entry 2182 (class 0 OID 0)
+-- TOC entry 2168 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -2570,7 +2451,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2016-06-28 11:46:35 BRT
+-- Completed on 2016-06-30 18:31:50 BRT
 
 --
 -- PostgreSQL database dump complete
