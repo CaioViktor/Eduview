@@ -37,40 +37,9 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 api = Api(app)
 
-connection_string = "host='localhost' dbname='eduviewBD' user='postgres' password='014526'"
+connection_string = "host='localhost' dbname='teste' user='postgres' password='014526'"
 conn = psycopg2.connect(connection_string)
 
-
-#class usuarios(Resource):
-#    def get(self, usuario):
-#        test = coll.find_one({'username': usuario}, {'_id': 0})
-#        if test: 
-#        	return {'codigo' : 0 ,"mensagem" : test}
-#        else:
-#        	return {'codigo': 1,'mensagem':'Usuario nao existente'}
-
-#    def post(self, usuario):
-#        data = request.get_json()
-#        test = coll.find_one({'username': usuario})
-#        if not test:
-#        	coll.insert_one(data)
-#        	return {'codigo' : 0 ,"mensagem" : test}
-#        else:
-#        	return {'codigo':1,'mensagem': 'Usuario ja existe'}
-
-#    def put(self, usuario):
-#    	data = request.get_json()
-#    	data = dict(data)
-#    	coll.update_one({'username': usuario}, {'$set': data})
-#    	return {'codigo' : 0 ,'mensagem' : 'Usuario atualizado'}
-
-
-
-#api.add_resource(usuarios, '/palinha/<string:usuario>', endpoint = 'usuario_endpoint')
-#api.add_resource(musicas, '/palinha/<string:usuario>/<string:musicapai>', endpoint = 'musica_endpoint')
-#api.add_resource(posts, '/palinha/posts/<string:usuario>/<string:nomemusica>', endpoint = 'post_endpoint')
-#api.add_resource(follow, '/palinha/seguir/<string:usuario>/<string:following>', endpoint = 'seguir_endpoint')
-#api.add_resource(feed, '/palinha/feed/<string:usuario>', endpoint = 'feed_endpoint')
 
 def getCursor():
 	cursor = conn.cursor('cursor_unique_name', cursor_factory=psycopg2.extras.DictCursor)
@@ -167,10 +136,68 @@ class listEscola(Resource):
 				
 		closeCursor(cursor)
 		return resultado	
+
+class sql(Resource):
+	def get(self):
+		data = request.get_json()
+		data = dict(data)
+		sql = data['sql']
+		cursor = getCursor()
+		cursor.execute(sql)
+		contador = 0
+		resultado = {'contador':0}
+		for linha in cursor:
+			contador+=1
+			resultado['contador'] = contador
+			resultado[contador] = dict(linha)
+		closeCursor(cursor)
+		return resultado
 		
 
+def getUsuario(usuario):
+	resultado = {}
+	resultado['id_usuario'] = usuario[0]
+	resultado['username'] = usuario[1]
+	resultado['password'] = usuario[2]
+	resultado['nome'] = usuario[3]
+	resultado['email'] = usuario[4]
+	return resultado
+	
+class usuarios(Resource):
+    def get(self, usuario):
+        cursor = getCursor()
+        sql = 'SELECT * FROM public."Usuario" WHERE username = ' +"'" + usuario+"'"
+        cursor.execute(sql)
+	contador = 0
+	resultado = {'contador':0}
+	for linha in cursor:
+		contador+=1
+		resultado['contador'] = contador
+		resultado[contador] = getUsuario(linha)
+	closeCursor(cursor)
+	return resultado
+        
+    def post(self, usuario):
+        data = request.get_json()
+        usuario = dict(data)
+        sql = 'INSERT INTO public."Usuario" (username,password,nome,email) VALUES('+"'"+usuario['username']+"','"+usuario['password']+"','"+usuario['nome']+"','"+usuario['email']+"')"
+        cursor = conn.cursor()
+        try:
+       	        cursor.execute(sql)
+	        conn.commit()
+        except:
+        	conn.rollback()	
+        closeCursor(cursor)
+        return {'codigo':0}
+
+    
+
+
+
+api.add_resource(usuarios, '/usuario/<string:usuario>', endpoint = 'usuario_endpoint')
 api.add_resource(escola,'/escola/<string:campo>/<string:comparador>/<string:valor>/<string:deslocamento>',endpoint='escola_endpoint')
 api.add_resource(listEscola,'/listescola/<string:longitude>/<string:latitude>/<string:raio>/<int:maximo>',endpoint='listEscola_endpoint')
+api.add_resource(sql,'/sql',endpoint='sql_endpoint')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
