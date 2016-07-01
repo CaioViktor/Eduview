@@ -1,5 +1,7 @@
 package dspm.dc.ufc.br.eduview;
 
+import org.json.JSONObject;
+
 public class Escola {
 
     private String nome;
@@ -73,6 +75,90 @@ public class Escola {
         this.cep = cep;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Escola(String json){
+        try{
+            JSONObject object = new JSONObject(json);
+            this.nome = object.getString("nome");
+            this.rua = object.getString("rua");
+            this.bairro = object.getString("bairro");
+            this.numero = object.getInt("numero");
+            this.ddd = object.getInt("ddd");
+            this.telefone = object.getInt("telefone");
+            this.email = object.getString("email");
+            this.situacao = object.getString("situacao");
+            this.predio_proprio = object.getString("predio_proprio");
+            this.acessibilidade = object.getString("acessibilidade");
+            this.rede = object.getString("rede");
+            this.atendimento_especializado = object.getString("atendimento_especializado");
+            this.refeitorio = object.getString("refeitorio");
+            this.auditorio = object.getString("auditorio");
+            this.laboratorio_informatica = object.getString("laboratorio_informatica");
+            this.laboratorio_ciencias = object.getString("laboratorio_ciencias");
+            this.quadra_coberta = object.getString("quadra_coberta");
+            this.quadra_descoberta = object.getString("quadra_descoberta");
+            this.patio_coberto = object.getString("patio_coberto");
+            this.patio_descoberto = object.getString("patio_descoberto");
+            this.parque_infantil = object.getString("parque_infantil");
+            this.biblioteca = object.getString("biblioteca");
+            this.numero_salas = object.getInt("numero_salas");
+            this.alimentacao = object.getString("alimentacao");
+            this.agua = object.getString("agua");
+            this.energia = object.getString("energia");
+            this.internet = object.getString("internet");
+            this.quantidade_computadores = object.getInt("quantidade_computadores");
+            this.pk_escola = object.getInt("pk_escola");
+            this.cep = object.getString("cep");
+            this.latitude = (float)object.getDouble("latitude");
+            this.longitude = (float)object.getDouble("longitude");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String toJson(){
+        JSONObject object = new JSONObject();
+        String json = "";
+        try{
+            object.put("nome",this.nome);
+            object.put("rua",this.rua);
+            object.put("bairro",this.bairro);
+            object.put("numero",this.numero);
+            object.put("ddd",this.ddd);
+            object.put("telefone",this.telefone);
+            object.put("email",this.email);
+            object.put("situacao",this.situacao);
+            object.put("predio_proprio",this.predio_proprio);
+            object.put("acessibilidade",this.acessibilidade);
+            object.put("rede",this.rede);
+            object.put("atendimento_especializado",this.atendimento_especializado);
+            object.put("refeitorio",this.refeitorio);
+            object.put("auditorio",this.auditorio);
+            object.put("laboratorio_informatica",this.laboratorio_informatica);
+            object.put("laboratorio_ciencias",this.laboratorio_ciencias);
+            object.put("quadra_coberta",this.quadra_coberta);
+            object.put("quadra_descoberta",this.quadra_descoberta);
+            object.put("patio_coberto",this.patio_coberto);
+            object.put("patio_descoberto",this.patio_descoberto);
+            object.put("parque_infantil",this.parque_infantil);
+            object.put("biblioteca",this.biblioteca);
+            object.put("numero_salas",this.numero_salas);
+            object.put("alimentacao",this.alimentacao);
+            object.put("agua",this.agua);
+            object.put("energia",this.energia);
+            object.put("internet",this.internet);
+            object.put("quantidade_computadores",this.quantidade_computadores);
+            object.put("pk_escola",this.pk_escola);
+            object.put("cep",this.cep);
+            object.put("latitude",this.latitude);
+            object.put("longitude",this.longitude);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        json = object.toString();
+        return json;
     }
 
     public String getNome() {

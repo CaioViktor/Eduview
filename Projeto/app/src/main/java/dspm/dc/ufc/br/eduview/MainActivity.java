@@ -2,7 +2,11 @@ package dspm.dc.ufc.br.eduview;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -25,12 +29,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     private GoogleMap map;
     private LatLng defaultLocal = new LatLng(-3.7460927, -38.5743825);
     private int defaultZoom = 16;
-
+    public Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Gerado automaticamente
@@ -58,24 +65,49 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         //mapinha carregado e feliz
         map = googleMap;
-        LatLng local;
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //checa se consegue ler a localizacao
+        final MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+            @Override
+            public void gotLocation(Location location){
+                //Usar a localizacao aqui!
+
+                final LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        marcarMapa(latLng,"Você está aqui");
+                    }
+                });
+
+            }
+        };
+
+        final MyLocation localizacao = new MyLocation(handler);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                localizacao.getLocation(MainActivity.this, locationResult);
+            }
+        }).start();
+    }
+    public void marcarMapa(LatLng posicao,String texto){
+        LatLng local = posicao;
         int zoom;
         //checa se consegue ler a localizacao
-        LocationHelper lh = new LocationHelper(getBaseContext());
 
         //LatLng localRetornado = lh.getLocation();
         //se nao conseguir, coloca no default (Pici)
-        local = defaultLocal;
-        zoom = defaultZoom;
 
+        zoom = defaultZoom;
         //move a camera pro local do usuario/default
         CameraPosition cameraPosition = new CameraPosition.Builder().target(local).zoom(zoom).build();
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         //adiciona um marker de onde o usuario esta/default:
-        MarkerOptions marker = new MarkerOptions().position(local).title("Você está aqui!!");
+        MarkerOptions marker = new MarkerOptions().position(local).title(texto);
         map.addMarker(marker);
-
     }
 
     @Override
