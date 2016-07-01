@@ -203,10 +203,46 @@ class usuarios(Resource):
 
     
 
-
+def getAvaliacao(avaliacao):
+	resultado = {}
+	resultado['id_escola'] = avaliacao[0]
+	resultado['id_usuario'] = avaliacao[1]
+	resultado['texto'] = avaliacao[2]
+	resultado['data'] = str(avaliacao[3])
+	resultado['avaliacao'] = avaliacao[4]
+	return resultado
+	
+class avaliacao(Resource):
+	def get(self,pk_escola,limite,deslocamento):
+		cursor = getCursor()
+		sql = 'SELECT * FROM public."Avaliacao" WHERE id_escola = ' +"'"+pk_escola+"' ORDER BY data DESC LIMIT " +limite +" OFFSET "+deslocamento
+		resultado = {'contador':0}
+		contador = 0
+		cursor.execute(sql)
+		for linha in cursor:
+			contador+= 1
+			resultado[contador] = getAvaliacao(linha)
+			resultado['contador'] = contador
+		closeCursor(cursor)
+		return resultado
+		
+	def post(self,pk_escola,limite,deslocamento):
+		data = request.get_json()
+		usuario = dict(data)
+		sql = 'INSERT INTO public."Avaliacao" (id_escola,id_usuario,texto,data,avaliacao) VALUES('+"'"+usuario['id_escola']+"','"+usuario['id_usuario']+"','"+usuario['texto']+"','"+usuario['data']+"','"+usuario['avaliacao']+"')"
+		cursor = conn.cursor()
+		try:
+	       	        cursor.execute(sql)
+			conn.commit()
+		except:
+			conn.rollback()	
+			return {'codigo':1}
+		closeCursor(cursor)
+		return {'codigo':0}
 
 api.add_resource(usuarios, '/usuario/<string:usuario>', endpoint = 'usuario_endpoint')
 api.add_resource(escola,'/escola/<string:orderby>/<string:limite>/<string:deslocamento>',endpoint='escola_endpoint')
+api.add_resource(avaliacao,'/avaliacao/<string:pk_escola>/<string:limite>/<string:deslocamento>',endpoint='avaliacao_endpoint')
 api.add_resource(listEscola,'/listescola/<string:longitude>/<string:latitude>/<string:raio>/<int:maximo>',endpoint='listEscola_endpoint')
 api.add_resource(sql,'/sql',endpoint='sql_endpoint')
 
