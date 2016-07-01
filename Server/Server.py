@@ -86,15 +86,15 @@ def getEscola(cursor):
 	return resultado
 	
 class escola(Resource):
-	def get(self,campo,comparador,valor,deslocamento):
-		valor = "'"+valor+"'"
-		campo = 'e.'+campo
-		if(comparador.lower() == 'like'):
-			campo = 'UPPER('+campo+')'
-			valor = 'UPPER('+valor+')'
+	def get(self,orderby,limite,deslocamento):
+		data = request.get_json()
+		where = ''
+		if data:
+			data = dict(data)
+			where = data['where']
 		cursor = getCursor()
-		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola WHERE ' + campo + " " +comparador + " " +valor+" GROUP BY  e.pk_escola ORDER BY e.pk_escola LIMIT 10 OFFSET " + deslocamento
-		print sql
+		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola '+ where + " GROUP BY e.pk_escola ORDER BY " + orderby +" LIMIT "+limite+" OFFSET " + deslocamento
+		#print sql
 		cursor.execute(sql)
 		contador = 0
 		resultado = {'contador':0}
@@ -108,8 +108,18 @@ class escola(Resource):
 class listEscola(Resource):	
 	def get(self,longitude,latitude,raio,maximo):
 		cursor = getCursor()
-		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola WHERE latitude IS NOT NULL AND longitude IS NOT NULL GROUP BY e.pk_escola'
-		cursor.execute(sql)
+		data = request.get_json()
+		where = ''
+		if data:
+			data = dict(data)
+			where = ' AND '+ data['where']
+		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola WHERE latitude IS NOT NULL AND longitude IS NOT NULL '+ where +' GROUP BY e.pk_escola'
+		#print sql
+		try:
+			cursor.execute(sql)
+		except:
+			conn.rollback()
+			return {'codigo':1}
 		contador = 0
 		resultado = {'contador':0}
 		itens = []
@@ -187,6 +197,7 @@ class usuarios(Resource):
 	        conn.commit()
         except:
         	conn.rollback()	
+        	return {'codigo':1}
         closeCursor(cursor)
         return {'codigo':0}
 
@@ -195,7 +206,7 @@ class usuarios(Resource):
 
 
 api.add_resource(usuarios, '/usuario/<string:usuario>', endpoint = 'usuario_endpoint')
-api.add_resource(escola,'/escola/<string:campo>/<string:comparador>/<string:valor>/<string:deslocamento>',endpoint='escola_endpoint')
+api.add_resource(escola,'/escola/<string:orderby>/<string:limite>/<string:deslocamento>',endpoint='escola_endpoint')
 api.add_resource(listEscola,'/listescola/<string:longitude>/<string:latitude>/<string:raio>/<int:maximo>',endpoint='listEscola_endpoint')
 api.add_resource(sql,'/sql',endpoint='sql_endpoint')
 
