@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,15 +30,22 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,ObserverServer {
     private GoogleMap map;
     private LatLng defaultLocal = new LatLng(-3.7460927, -38.5743825);
     private int defaultZoom = 16;
     public Handler handler = new Handler();
+    private Server server;
+    private LatLng posicao;
+    private ArrayList<Escola> escolas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Gerado automaticamente
@@ -60,6 +68,10 @@ public class MainActivity extends AppCompatActivity
 
         SupportMapFragment map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         map.getMapAsync(this);
+        server = new Server(this);
+        server.attachObserver(this);//Increve o objeto para ser notificado
+        posicao = null;
+        escolas = new ArrayList<>();
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -77,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        marcarMapa(latLng,"Você está aqui");
+                        setarPosicao(latLng);
                     }
                 });
 
@@ -91,6 +103,19 @@ public class MainActivity extends AppCompatActivity
                 localizacao.getLocation(MainActivity.this, locationResult);
             }
         }).start();
+    }
+    public void setarPosicao(LatLng latLng){
+        posicao = latLng;
+        marcarMapa(posicao, "Você está aqui");
+        JSONObject object = new JSONObject();
+        //Exemplo de requisição com filtro
+//        try {
+//            object.put("where","UPPER(nome) LIKE \'%ACA%\'");
+//            server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.longitude + "/" + posicao.latitude + "/10/10", object.toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.latitude + "/" + posicao.longitude+ "/10/10", null);
     }
     public void marcarMapa(LatLng posicao,String texto){
         LatLng local = posicao;
@@ -168,4 +193,34 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void notifyPOST(String response) {
+        try{
+            JSONObject jsonObject = new JSONObject(response);
+            if(jsonObject.has("codigo") && jsonObject.getInt("codigo") == 1)
+                Toast.makeText(this,"Ocorreu um erro interno",Toast.LENGTH_LONG);
+            else{
+                int size = jsonObject.getInt("contador");
+                for(int i = 1; i <= size; i++){
+                    Escola escola = new Escola(jsonObject.getJSONObject(i+"").toString());
+                    escolas.add(escola);
+                }
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        for(Escola e : escolas)
+            Log.i("LOGP",e.getBairro());
+    }
+
+    @Override
+    public void notifyGET(String response) {
+
+    }
+
+    @Override
+    public Handler getHandler() {
+        return handler;
+    }
 }

@@ -12,6 +12,7 @@ from flask_restful import Resource, Api
 from bson.objectid import ObjectId
 
 from math import radians, cos, sin, asin, sqrt
+from operator import itemgetter
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -29,10 +30,6 @@ def haversine(lon1, lat1, lon2, lat2):
     km = 6367 * c
     return km
     
-def getKey(item):
-		return item[0]
-   
-
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 api = Api(app)
@@ -86,12 +83,14 @@ def getEscola(cursor):
 	return resultado
 	
 class escola(Resource):
-	def get(self,orderby,limite,deslocamento):
-		data = request.get_json()
-		where = ''
-		if data:
-			data = dict(data)
-			where = data['where']
+	def post(self,orderby,limite,deslocamento):
+		try:		
+			data = request.get_json()
+			if data:
+				data = dict(data)
+				where = data['where']
+		except:
+			where = ''
 		cursor = getCursor()
 		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola '+ where + " GROUP BY e.pk_escola ORDER BY " + orderby +" LIMIT "+limite+" OFFSET " + deslocamento
 		#print sql
@@ -106,15 +105,22 @@ class escola(Resource):
 		return resultado
 		
 class listEscola(Resource):	
-	def get(self,longitude,latitude,raio,maximo):
+	def post(self,longitude,latitude,raio,maximo):
 		cursor = getCursor()
-		data = request.get_json()
-		where = ''
-		if data:
-			data = dict(data)
-			where = ' AND '+ data['where']
+		try:
+#			print 'aqui'
+			data = request.get_json()
+#			print 'aqui'
+			if data:
+				data = dict(data)
+				print data
+				where = ' AND '+ data['where']
+		except:
+			
+			where = ''
+		
 		sql = 'SELECT e.*,AVG(a.avaliacao) AS avaliacao_media FROM public."Escola" e LEFT OUTER JOIN public."Avaliacao" a ON a.id_escola = e.pk_escola WHERE latitude IS NOT NULL AND longitude IS NOT NULL '+ where +' GROUP BY e.pk_escola'
-		#print sql
+#		print sql
 		try:
 			cursor.execute(sql)
 		except:
@@ -132,10 +138,11 @@ class listEscola(Resource):
 			distancia  = haversine(long1,lat1,long2,lat2)
 			raio = float(str(raio).replace(",","."))
 			if (distancia <= raio):
-				elemento = [distancia,escola]
+				elemento = (distancia,escola)
 				itens.append(elemento)
-		sorted(itens,key=getKey)
+		itens = sorted(itens,key=itemgetter(0))
 		for item in itens:
+			print item[0]
 			escola = item[1]
 			contador+=1
 			resultado['contador'] = contador
@@ -148,10 +155,13 @@ class listEscola(Resource):
 		return resultado	
 
 class sql(Resource):
-	def get(self):
-		data = request.get_json()
-		data = dict(data)
-		sql = data['sql']
+	def post(self):
+		try:
+			data = request.get_json()
+			data = dict(data)
+			sql = data['sql']
+		except:
+			return {'codigo':1 , 'mensagem':'Consulta não enviada'}
 		cursor = getCursor()
 		cursor.execute(sql)
 		contador = 0
@@ -188,8 +198,11 @@ class usuarios(Resource):
 	return resultado
         
     def post(self, usuario):
-        data = request.get_json()
-        usuario = dict(data)
+        try:
+        	data = request.get_json()
+        	usuario = dict(data)
+        except:
+        	return {'codigo':1}
         sql = 'INSERT INTO public."Usuario" (username,password,nome,email) VALUES('+"'"+usuario['username']+"','"+usuario['password']+"','"+usuario['nome']+"','"+usuario['email']+"')"
         cursor = conn.cursor()
         try:
@@ -227,8 +240,11 @@ class avaliacao(Resource):
 		return resultado
 		
 	def post(self,pk_escola,limite,deslocamento):
-		data = request.get_json()
-		usuario = dict(data)
+		try:
+			data = request.get_json()
+			usuario = dict(data)
+		except:
+			return {'codigo':1}
 		sql = 'INSERT INTO public."Avaliacao" (id_escola,id_usuario,texto,data,avaliacao) VALUES('+"'"+usuario['id_escola']+"','"+usuario['id_usuario']+"','"+usuario['texto']+"','"+usuario['data']+"','"+usuario['avaliacao']+"')"
 		cursor = conn.cursor()
 		try:

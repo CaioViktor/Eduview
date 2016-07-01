@@ -79,6 +79,8 @@ public class Escola {
 
     public Escola(String json){
         try{
+            //TODO: Nos casos onde o atributo não é do tipo string é preciso fazer um tratamento, pois pode vir com o valor S/N, SN, S ou alguma outra string louca que represente que não tem
+            //TODO:Para resolver esse problema indico que todos os atributos seja do tipo string
             JSONObject object = new JSONObject(json);
             this.nome = object.getString("nome");
             this.rua = object.getString("rua");
@@ -110,8 +112,8 @@ public class Escola {
             this.quantidade_computadores = object.getInt("quantidade_computadores");
             this.pk_escola = object.getInt("pk_escola");
             this.cep = object.getString("cep");
-            this.latitude = (float)object.getDouble("latitude");
-            this.longitude = (float)object.getDouble("longitude");
+            this.latitude = Float.parseFloat(object.getString("latitude").replace(",","."));
+            this.longitude = Float.parseFloat(object.getString("longitude").replace(",","."));
         }catch(Exception e){
             e.printStackTrace();
         }

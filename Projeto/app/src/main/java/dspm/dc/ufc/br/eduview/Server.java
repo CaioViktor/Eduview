@@ -3,6 +3,7 @@ package dspm.dc.ufc.br.eduview;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import java.net.URL;
 public class Server implements ObservableServer{
     public final static String HOST = "192.168.1.6";
     public final static String PORT = ":5000";
+    public final static String HTTP = "http://";
     private ObserverServer chamador;
     private Context context;
     public Server(Context context){
@@ -55,18 +57,20 @@ public class Server implements ObservableServer{
                     con = (HttpURLConnection) link.openConnection();
                     con.setDoOutput(true);
                     con.setDoInput(true);
-                    con.setConnectTimeout(7000);
                     con.setRequestProperty("Content-Type", "application/json");
                     con.setRequestProperty("Accept", "application/json");
                     con.setRequestMethod("POST");
 
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-//                    Log.i("LOGP",objeto.toJson());
-                    if(json != null)
+//                    Log.i("LOGP",json);
+                    if(json != null){
                         wr.write(json);
+                        Log.i("LOGP", json);
+                    }
                     else
                         wr.write("");
                     wr.flush();
+                    wr.close();
 
 
                     final StringBuilder sb = new StringBuilder();
@@ -110,6 +114,7 @@ public class Server implements ObservableServer{
     }
 
     public void GET(final String url){
+        Log.i("LOGP",url);
         if(!isConnected()){
             chamador.getHandler().post(new Runnable() {
                 @Override
@@ -130,10 +135,20 @@ public class Server implements ObservableServer{
                     URL link = new URL(url);
                     connection = (HttpURLConnection) link.openConnection();
                     connection.setReadTimeout(10000);
-                    connection.setConnectTimeout(7000);
+                    connection.setConnectTimeout(15000);
                     connection.setRequestMethod("GET");
                     connection.setDoInput(true);
+
+//                    connection.setDoOutput(true);
+//                    OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+////                    Log.i("LOGP",objeto.toJson());
+//                    if(json != null)
+//                        wr.write(json);
+//                    else
+//                        wr.write("");
+//                    wr.flush();
                     connection.connect();
+
                     InputStream is = connection.getInputStream();
                     BufferedReader leitor = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                     String linha = leitor.readLine();
