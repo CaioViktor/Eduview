@@ -1,8 +1,12 @@
 package dspm.dc.ufc.br.eduview;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,24 +17,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+    private GoogleMap map;
+    private LatLng defaultLocal = new LatLng(-3.7460927, -38.5743825);
+    private int defaultZoom = 16;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Gerado automaticamente
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        //Apaguei o fab (botaozinho que fica no canto)
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -40,6 +49,33 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //termina o gerado automaticamente
+
+        SupportMapFragment map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        map.getMapAsync(this);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //mapinha carregado e feliz
+        map = googleMap;
+        LatLng local;
+        int zoom;
+        //checa se consegue ler a localizacao
+        LocationHelper lh = new LocationHelper(getBaseContext());
+
+        //LatLng localRetornado = lh.getLocation();
+        //se nao conseguir, coloca no default (Pici)
+        local = defaultLocal;
+        zoom = defaultZoom;
+
+        //move a camera pro local do usuario/default
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(local).zoom(zoom).build();
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        //adiciona um marker de onde o usuario esta/default:
+        MarkerOptions marker = new MarkerOptions().position(local).title("Você está aqui!!");
+        map.addMarker(marker);
+
     }
 
     @Override
@@ -98,4 +134,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
