@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,12 +42,14 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,ObserverServer {
     private GoogleMap map;
-    private LatLng defaultLocal = new LatLng(-3.7460927, -38.5743825);
+
     private int defaultZoom = 16;
     public Handler handler = new Handler();
     private Server server;
     private LatLng posicao;
     private ArrayList<Escola> escolas;
+    private LocationHelper lh;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Gerado automaticamente
@@ -79,34 +83,16 @@ public class MainActivity extends AppCompatActivity
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        //checa se consegue ler a localizacao
-        final MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-            @Override
-            public void gotLocation(Location location){
-                //Usar a localizacao aqui!
+        lh = new LocationHelper(this);
+        lh.conect(); //chamar o connect vai fazer a chamada de pegar localizacao
 
-                final LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setarPosicao(latLng);
-                    }
-                });
-
-            }
-        };
-
-        final MyLocation localizacao = new MyLocation(handler);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                localizacao.getLocation(MainActivity.this, locationResult);
-            }
-        }).start();
     }
+
     public void setarPosicao(LatLng latLng){
+        map.clear();
+        Log.i("MainActivity","Entrou no setarPosicao");
         posicao = latLng;
-        marcarMapa(posicao, "Você está aqui");
+        marcarMapa(posicao,getResources().getString(R.string.MAIN_MARKER_TEXT));
         JSONObject object = new JSONObject();
         //Exemplo de requisição com filtro
 //        try {
@@ -115,7 +101,7 @@ public class MainActivity extends AppCompatActivity
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-        server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.latitude + "/" + posicao.longitude+ "/10/10", null);
+        //server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.latitude + "/" + posicao.longitude+ "/10/10", null);
     }
     public void marcarMapa(LatLng posicao,String texto){
         LatLng local = posicao;
@@ -222,5 +208,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Handler getHandler() {
         return handler;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults) {
+        if (requestCode == LocationHelper.REQUEST_LOCATION) {
+            if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // We can now safely use the API we requested access to
+                lh.startListeningUpdates();
+                //lh.getLocationAndMark();
+
+            } else {
+                // Permission was denied or request was cancelled
+                Log.i("RequestGPS","Permissao Negada");
+                (Toast.makeText(this,getResources().getString(R.string.PERMISSION_DENIED), Toast.LENGTH_LONG)).show();
+                lh.getDefaultLocationAndMark();
+            }
+        }
+    }
+
+    public boolean requestGPSPermission(){
+        Log.i("RequestGPS","Entrou no requestGPSPermission");
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LocationHelper.REQUEST_LOCATION);
+
+        return false;
     }
 }

@@ -7,9 +7,9 @@ public class Escola {
     private String nome;
     private String rua;
     private String bairro;
-    private int numero;
-    private int ddd;
-    private int telefone;
+    private String numero;
+    private String ddd;
+    private String telefone;
     private String email;
     private String situacao;
     private String predio_proprio;
@@ -26,23 +26,23 @@ public class Escola {
     private String patio_descoberto;
     private String parque_infantil;
     private String biblioteca;
-    private int numero_salas;
+    private String numero_salas;
     private String alimentacao;
     private String agua;
     private String energia;
     private String internet;
-    private int quantidade_computadores;
+    private String quantidade_computadores;
     private int pk_escola;
     private String cep;
-    private float latitude;
-    private float longitude;
+    private String latitude;
+    private String longitude;
 
     public Escola() {
 
 
     }
 
-    public Escola(String nome, String rua, String bairro, int numero, int ddd, int telefone, String email, String situacao, String predio_proprio, String acessibilidade, String rede, String atendimento_especializado, String refeitorio, String auditorio, String laboratorio_informatica, String laboratorio_ciencias, String quadra_coberta, String quadra_descoberta, String patio_coberto, String patio_descoberto, String parque_infantil, String biblioteca, int numero_salas, String alimentacao, String agua, String energia, String internet, int quantidade_computadores, int pk_escola, String cep, float latitude, float longitude) {
+    public Escola(String nome, String rua, String bairro, String numero, String ddd, String telefone, String email, String situacao, String predio_proprio, String acessibilidade, String rede, String atendimento_especializado, String refeitorio, String auditorio, String laboratorio_informatica, String laboratorio_ciencias, String quadra_coberta, String quadra_descoberta, String patio_coberto, String patio_descoberto, String parque_infantil, String biblioteca, String numero_salas, String alimentacao, String agua, String energia, String internet, String quantidade_computadores, int pk_escola, String cep, String latitude, String longitude) {
         this.nome = nome;
         this.rua = rua;
         this.bairro = bairro;
@@ -79,15 +79,13 @@ public class Escola {
 
     public Escola(String json){
         try{
-            //TODO: Nos casos onde o atributo não é do tipo string é preciso fazer um tratamento, pois pode vir com o valor S/N, SN, S ou alguma outra string louca que represente que não tem
-            //TODO:Para resolver esse problema indico que todos os atributos seja do tipo string
             JSONObject object = new JSONObject(json);
             this.nome = object.getString("nome");
             this.rua = object.getString("rua");
             this.bairro = object.getString("bairro");
-            this.numero = object.getInt("numero");
-            this.ddd = object.getInt("ddd");
-            this.telefone = object.getInt("telefone");
+            this.numero = object.getString("numero");
+            this.ddd = object.getString("ddd");
+            this.telefone = object.getString("telefone");
             this.email = object.getString("email");
             this.situacao = object.getString("situacao");
             this.predio_proprio = object.getString("predio_proprio");
@@ -104,16 +102,16 @@ public class Escola {
             this.patio_descoberto = object.getString("patio_descoberto");
             this.parque_infantil = object.getString("parque_infantil");
             this.biblioteca = object.getString("biblioteca");
-            this.numero_salas = object.getInt("numero_salas");
+            this.numero_salas = object.getString("numero_salas");
             this.alimentacao = object.getString("alimentacao");
             this.agua = object.getString("agua");
             this.energia = object.getString("energia");
             this.internet = object.getString("internet");
-            this.quantidade_computadores = object.getInt("quantidade_computadores");
+            this.quantidade_computadores = object.getString("quantidade_computadores");
             this.pk_escola = object.getInt("pk_escola");
             this.cep = object.getString("cep");
-            this.latitude = Float.parseFloat(object.getString("latitude").replace(",","."));
-            this.longitude = Float.parseFloat(object.getString("longitude").replace(",","."));
+            this.latitude = object.getString("latitude").replace(",",".");
+            this.longitude = object.getString("longitude").replace(",",".");
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -187,27 +185,27 @@ public class Escola {
         this.bairro = bairro;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 
-    public int getDdd() {
+    public String getDdd() {
         return ddd;
     }
 
-    public void setDdd(int ddd) {
+    public void setDdd(String ddd) {
         this.ddd = ddd;
     }
 
-    public int getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(int telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
@@ -339,11 +337,11 @@ public class Escola {
         this.biblioteca = biblioteca;
     }
 
-    public int getNumero_salas() {
+    public String getNumero_salas() {
         return numero_salas;
     }
 
-    public void setNumero_salas(int numero_salas) {
+    public void setNumero_salas(String numero_salas) {
         this.numero_salas = numero_salas;
     }
 
@@ -379,11 +377,11 @@ public class Escola {
         this.internet = internet;
     }
 
-    public int getQuantidade_computadores() {
+    public String getQuantidade_computadores() {
         return quantidade_computadores;
     }
 
-    public void setQuantidade_computadores(int quantidade_computadores) {
+    public void setQuantidade_computadores(String quantidade_computadores) {
         this.quantidade_computadores = quantidade_computadores;
     }
 
@@ -403,19 +401,19 @@ public class Escola {
         this.cep = cep;
     }
 
-    public float getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 }
