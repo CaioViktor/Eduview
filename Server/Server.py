@@ -34,7 +34,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 api = Api(app)
 
-connection_string = "host='localhost' dbname='EduView' user='postgres' password='admin'"
+connection_string = "host='localhost' dbname='teste' user='postgres' password='014526'"
 conn = psycopg2.connect(connection_string)
 
 
@@ -142,7 +142,7 @@ class listEscola(Resource):
 				itens.append(elemento)
 		itens = sorted(itens,key=itemgetter(0))
 		for item in itens:
-			print item[0]
+#			print item[0]
 			escola = item[1]
 			contador+=1
 			resultado['contador'] = contador
