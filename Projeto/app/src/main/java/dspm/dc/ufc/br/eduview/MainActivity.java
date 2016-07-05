@@ -1,7 +1,10 @@
 package dspm.dc.ufc.br.eduview;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,34 +25,41 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.ExceptionParser;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,ObserverServer {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {//},ObserverServer {
     private GoogleMap map;
 
-    private int defaultZoom = 16;
+    private int defaultZoom = 14;
     public Handler handler = new Handler();
     private Server server;
     private LatLng posicao;
     private ArrayList<Escola> escolas;
     private LocationHelper lh;
+    private ServerCallsHelper serverCallsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,16 +83,49 @@ public class MainActivity extends AppCompatActivity
 
         SupportMapFragment map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         map.getMapAsync(this);
-        server = new Server(this);
-        server.attachObserver(this);//Increve o objeto para ser notificado
+
+        serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
-        escolas = new ArrayList<>();
+
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //mapinha carregado e feliz
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //o proximo metodo é pra permitir que o marker exiba mais que duas linhas
+        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                Context context = getApplicationContext(); //or getActivity(), YourActivity.this, etc.
+
+                LinearLayout info = new LinearLayout(context);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(context);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(context);
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
 
         lh = new LocationHelper(this);
         lh.conect(); //chamar o connect vai fazer a chamada de pegar localizacao
@@ -93,32 +137,41 @@ public class MainActivity extends AppCompatActivity
         Log.i("MainActivity","Entrou no setarPosicao");
         posicao = latLng;
         marcarMapa(posicao,getResources().getString(R.string.MAIN_MARKER_TEXT));
-        JSONObject object = new JSONObject();
+
         //Exemplo de requisição com filtro
-//        try {
-//            object.put("where","UPPER(nome) LIKE \'%ACA%\'");
-//            server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.longitude + "/" + posicao.latitude + "/10/10", object.toString());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-        //server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.latitude + "/" + posicao.longitude+ "/10/10", null);
+        serverCallsHelper.getEscolas(posicao,10,15);
+
     }
+
     public void marcarMapa(LatLng posicao,String texto){
-        LatLng local = posicao;
-        int zoom;
-        //checa se consegue ler a localizacao
 
-        //LatLng localRetornado = lh.getLocation();
-        //se nao conseguir, coloca no default (Pici)
-
-        zoom = defaultZoom;
         //move a camera pro local do usuario/default
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(local).zoom(zoom).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(posicao).zoom(defaultZoom).build();
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         //adiciona um marker de onde o usuario esta/default:
-        MarkerOptions marker = new MarkerOptions().position(local).title(texto);
+        MarkerOptions marker = new MarkerOptions().position(posicao).title(texto);
         map.addMarker(marker);
+    }
+
+    public void marcarEscolaNoMapa(Escola e){
+        try{
+            float lat = Float.parseFloat(e.getLatitude());
+            float lng = Float.parseFloat(e.getLongitude());
+
+            Log.i("MainActivity","Vai marcar escola de coordenadas: "+lng+" e "+lat);
+            String titulo = e.getNome();
+            String snippet = "Escola da rede "+e.getRede()+"\nEndereco: "+e.getRua()+" - "+e.getNumero();
+
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(lng,lat)).icon(BitmapDescriptorFactory.fromResource(R.drawable.schoolmarker)).title(titulo).snippet(snippet);
+            map.addMarker(marker);
+
+        }catch(Exception exception){
+
+        }
+
+
+
     }
 
     @Override
@@ -176,38 +229,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    @Override
-    public void notifyPOST(String response) {
-        try{
-            JSONObject jsonObject = new JSONObject(response);
-            if(jsonObject.has("codigo") && jsonObject.getInt("codigo") == 1)
-                Toast.makeText(this,"Ocorreu um erro interno",Toast.LENGTH_LONG);
-            else{
-                int size = jsonObject.getInt("contador");
-                for(int i = 1; i <= size; i++){
-                    Escola escola = new Escola(jsonObject.getJSONObject(i+"").toString());
-                    escolas.add(escola);
-                }
-
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        for(Escola e : escolas)
-            Log.i("LOGP",e.getBairro());
-    }
-
-    @Override
-    public void notifyGET(String response) {
-
-    }
-
-    @Override
-    public Handler getHandler() {
-        return handler;
     }
 
     @Override
