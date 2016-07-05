@@ -1,29 +1,13 @@
 package dspm.dc.ufc.br.eduview;
 
 import android.Manifest;
-<<<<<<< HEAD
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-=======
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
->>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -32,17 +16,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
-=======
-import com.google.android.gms.analytics.ExceptionParser;
-import com.google.android.gms.location.LocationServices;
->>>>>>> origin/master
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,9 +34,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONObject;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -136,6 +114,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Log.i("MainActivity","Clicou no infowindow do marker de Coordenadas: "+marker.getPosition().latitude+" e "+marker.getPosition().longitude);
+            }
+        });
+
+
         lh = new LocationHelper(this);
         lh.conect(); //chamar o connect vai fazer a chamada de pegar localizacao
 
@@ -170,12 +157,13 @@ public class MainActivity extends AppCompatActivity
 
             Log.i("MainActivity","Vai marcar escola de coordenadas: "+lng+" e "+lat);
             String titulo = e.getNome();
-            String snippet = "Escola da rede "+e.getRede()+"\nEndereco: "+e.getRua()+" - "+e.getNumero();
+            String snippet = "Escola da rede "+e.getRede()+"\nEndereco: "+e.getRua()+" - "+e.getNumero()+"\n\nClique para mais informações";
 
-            MarkerOptions marker = new MarkerOptions().position(new LatLng(lng,lat)).icon(BitmapDescriptorFactory.fromResource(R.drawable.schoolmarker)).title(titulo).snippet(snippet);
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(lng,lat)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title(titulo).snippet(snippet);
             map.addMarker(marker);
 
         }catch(Exception exception){
+            Log.i("MainActivity","Exception:"+exception.toString());
 
         }
 
