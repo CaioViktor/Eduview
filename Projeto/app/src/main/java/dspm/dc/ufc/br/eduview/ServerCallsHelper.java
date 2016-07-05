@@ -13,11 +13,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dspm.dc.ufc.br.eduview.servercalls.*;
+
+
 public class ServerCallsHelper implements ObserverServer {
     private Handler handler;
     private Context callerContext;
     private Server server;
-
 
 
     public ServerCallsHelper(Context mainContext){
@@ -28,7 +30,12 @@ public class ServerCallsHelper implements ObserverServer {
     }
 
     public void getEscolas(LatLng posicao,int raio, int maximo){
+        ServerCall sc = new CallEscolasProximas(posicao,raio,maximo);
+        sc.call();
+
         JSONObject object = new JSONObject();
+
+
         try {
             object.put("where","UPPER(nome) LIKE \'%ACA%\'");
             server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.longitude + "/" + posicao.latitude + "/"+raio+"/"+maximo, object.toString());
@@ -42,6 +49,7 @@ public class ServerCallsHelper implements ObserverServer {
 
     @Override
     public void notifyPOST(String response) {
+
         ArrayList<Escola> escolas = new ArrayList<>();
         try{
             JSONObject jsonObject = new JSONObject(response);

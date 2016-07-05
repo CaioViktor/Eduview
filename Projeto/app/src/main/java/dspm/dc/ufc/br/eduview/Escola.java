@@ -36,6 +36,7 @@ public class Escola {
     private String cep;
     private String latitude;
     private String longitude;
+    private String jsonConstructor = null;
 
 
     public Escola() {
@@ -80,6 +81,7 @@ public class Escola {
 
     public Escola(String json){
         try{
+            this.jsonConstructor = json;
             JSONObject object = new JSONObject(json);
             this.nome = object.getString("nome");
             this.rua = object.getString("rua");
@@ -416,6 +418,10 @@ public class Escola {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getJsonConstructor() {
+        return jsonConstructor;
     }
 
     public String[] getAll(){
