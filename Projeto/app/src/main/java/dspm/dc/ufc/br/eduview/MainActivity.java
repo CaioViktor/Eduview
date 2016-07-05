@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -35,16 +36,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {//},ObserverServer {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     private GoogleMap map;
 
     private int defaultZoom = 14;
     public Handler handler = new Handler();
     private Server server;
     private LatLng posicao;
-    private ArrayList<Escola> escolas;
+    private HashMap<LatLng,Escola> escolas = new HashMap<>();
     private LocationHelper lh;
     private ServerCallsHelper serverCallsHelper;
 
@@ -118,7 +119,14 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Log.i("MainActivity","Clicou no infowindow do marker de Coordenadas: "+marker.getPosition().latitude+" e "+marker.getPosition().longitude);
+
+                Escola escolaClicada = escolas.get(new LatLng(marker.getPosition().latitude,marker.getPosition().longitude));
+                if(escolaClicada==null){
+                    return;
+                }
+                Log.i("MainActivity","Clicou no infowindow do marker de Coordenadas: "+marker.getPosition().latitude+" e "+marker.getPosition().longitude+"\nEscola: "+escolaClicada.getNome());
+
+                infoEscola(escolaClicada.getJsonConstructor());
             }
         });
 
@@ -139,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void marcarMapa(LatLng posicao,String texto){
+    public void marcarMapa(LatLng posicao,String texto) {
 
         //move a camera pro local do usuario/default
         CameraPosition cameraPosition = new CameraPosition.Builder().target(posicao).zoom(defaultZoom).build();
@@ -151,19 +159,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void marcarEscolaNoMapa(Escola e){
-        try{
-            float lat = Float.parseFloat(e.getLatitude());
-            float lng = Float.parseFloat(e.getLongitude());
 
-            Log.i("MainActivity","Vai marcar escola de coordenadas: "+lng+" e "+lat);
+        try{
+            //AS COORDENADAS ESTAO TROCADAS!
+            float lat = Float.parseFloat(e.getLongitude());
+            float lng = Float.parseFloat(e.getLatitude());
+
+            escolas.put(new LatLng(lat,lng),e);
+
+            Log.i("MainActivity","Vai marcar escola de coordenadas: "+lat+" e "+lng);
             String titulo = e.getNome();
             String snippet = "Escola da rede "+e.getRede()+"\nEndereco: "+e.getRua()+" - "+e.getNumero()+"\n\nClique para mais informações";
 
-            MarkerOptions marker = new MarkerOptions().position(new LatLng(lng,lat)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title(titulo).snippet(snippet);
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(lat,lng)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title(titulo).snippet(snippet);
             map.addMarker(marker);
 
-        }catch(Exception exception){
-            Log.i("MainActivity","Exception:"+exception.toString());
+        }catch(Exception exception) {
+            Log.i("MainActivity", "Exception:" + exception.toString());
 
         }
 
@@ -253,7 +265,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void infoEscola (String json){
-        Intent intent = new Intent(this, InfoEscola.class);
+        Intent intent = new Intent(this,InfoEscola.class);
         intent.putExtra("json", json);
         startActivity(intent);
     }
