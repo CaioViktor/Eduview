@@ -37,6 +37,7 @@ public class Escola {
     private String latitude;
     private String longitude;
 
+
     public Escola() {
 
 
@@ -415,5 +416,20 @@ public class Escola {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String[] getAll(){
+        String[] string = {this.getNome(), this.getRua(), this.getNumero(), this.getBairro(),
+                this.getCep(), this.getDdd(), this.getTelefone(), this.getEmail(), this.getSituacao(),
+                this.getPredio_proprio(), this.getAcessibilidade(), this.getRede(),
+                this.getAtendimento_especializado(), this.getRefeitorio(), this.getAuditorio(),
+                this.getLaboratorio_informatica(), this.getLaboratorio_ciencias(),
+                this.getQuadra_coberta(), this.getQuadra_descoberta(), this.getPatio_coberto(),
+                this.getPatio_descoberto(), this.getParque_infantil(), this.getBiblioteca(),
+                this.getNumero_salas(), this.getAlimentacao(), this.getAgua(), this.getEnergia(),
+                this.getInternet(), this.getQuantidade_computadores()
+        };
+
+        return string;
     }
 }

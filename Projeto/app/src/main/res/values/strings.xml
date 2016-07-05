@@ -10,5 +10,6 @@
     <string name="PERMISSION_DENIED">Permissão Negada! A localização padrão (Campus do Pici) será carregada.</string>
     <string name="MAIN_MARKER_TEXT">Você está aqui!</string>
     <string name="GPS_DISABLED">Seu Serviço de Localização está desativado! A localização padrão (Campus do Pici) será carregada.</string>
+    <string name="title_activity_info_escola">InfoEscola</string>
 
 </resources>
