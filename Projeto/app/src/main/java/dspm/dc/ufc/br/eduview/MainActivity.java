@@ -176,11 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }catch(Exception exception) {
             Log.i("MainActivity", "Exception:" + exception.toString());
-
         }
-
-
-
     }
 
     @Override

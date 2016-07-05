@@ -1,19 +1,12 @@
 package dspm.dc.ufc.br.eduview;
 
 import android.content.Context;
-import android.location.Location;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import dspm.dc.ufc.br.eduview.servercalls.*;
+import dspm.dc.ufc.br.eduview.servercalls.CallEscolasProximas;
+import dspm.dc.ufc.br.eduview.servercalls.ServerCall;
 
 
 public class ServerCallsHelper{
