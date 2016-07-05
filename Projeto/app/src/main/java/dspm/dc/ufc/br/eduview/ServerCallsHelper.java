@@ -36,12 +36,12 @@ public class ServerCallsHelper implements ObserverServer {
         JSONObject object = new JSONObject();
 
 
-        try {
-            object.put("where","UPPER(nome) LIKE \'%ACA%\'");
-            server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.longitude + "/" + posicao.latitude + "/"+raio+"/"+maximo, object.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            object.put("where","UPPER(nome) LIKE \'%ACA%\'");
+//            server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.longitude + "/" + posicao.latitude + "/"+raio+"/"+maximo, object.toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         server.POST(server.HTTP + server.HOST + server.PORT + "/listescola/" + posicao.latitude + "/" + posicao.longitude+ "/"+raio+"/"+maximo, null);
 
 
