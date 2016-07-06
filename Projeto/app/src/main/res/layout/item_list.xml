@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/nomeEscola"
+        android:textColor="#000000"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:text="Nome da Escola" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/redeEscola"
+        android:textColor="#7c7c7c"
+        android:text="Rede da Escola"
+        android:layout_below="@+id/enderecoEscola"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/enderecoEscola"
+        android:textColor="#7c7c7c"
+        android:text="Endereço da Escola"
+        android:layout_below="@+id/nomeEscola" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/telefoneEscola"
+        android:textColor="#7c7c7c"
+        android:text="(DDD)XXXXXXXX"
+        android:layout_below="@+id/enderecoEscola"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

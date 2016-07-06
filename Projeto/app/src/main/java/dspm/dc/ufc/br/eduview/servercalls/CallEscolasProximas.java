@@ -1,7 +1,9 @@
 package dspm.dc.ufc.br.eduview.servercalls;
 
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dspm.dc.ufc.br.eduview.BDProvider;
 import dspm.dc.ufc.br.eduview.Escola;
 import dspm.dc.ufc.br.eduview.MainActivity;
 import dspm.dc.ufc.br.eduview.Server;
@@ -66,6 +69,14 @@ public class CallEscolasProximas extends ServerCall{
         }
         for(Escola e : escolas){
             Log.i("LOGP",e.getBairro());
+            //Adicionar ao BD:
+            ContentValues values = new ContentValues();
+            values.put(Escola.ID_ESCOLA,e.getPk_escola());
+            values.put(Escola.JSON_ESCOLA,e.getJsonConstructor());
+            values.put("notificacoes",0);
+            Uri uri = callerContext.getContentResolver().insert(BDProvider.CONTENT_URI_ESCOLAS, values);
+
+            //Marcar no mapa:
             ((MainActivity)callerContext).marcarEscolaNoMapa(e);
         }
 

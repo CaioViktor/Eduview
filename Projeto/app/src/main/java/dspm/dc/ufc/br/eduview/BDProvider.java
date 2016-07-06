@@ -21,8 +21,8 @@ public class BDProvider extends ContentProvider{
     static final String PROVIDER_NAME = "dspm.dc.ufc.br.eduview.provider.bd";
     static final String URL_ESCOLAS = "content://" + PROVIDER_NAME + "/escolas";
     static final String URL_AVALIACOES = "content://" + PROVIDER_NAME + "/avaliacoes";
-    static final Uri CONTENT_URI_ESCOLAS = Uri.parse(URL_ESCOLAS);
-    static final Uri CONTENT_URI_AVALIACOES = Uri.parse(URL_AVALIACOES);
+    static public final Uri CONTENT_URI_ESCOLAS = Uri.parse(URL_ESCOLAS);
+    static public final Uri CONTENT_URI_AVALIACOES = Uri.parse(URL_AVALIACOES);
 
     private static HashMap<String, String> ESCOLAS_PROJECTION_MAP;
     private static HashMap<String, String> AVALIACOES_PROJECTION_MAP;

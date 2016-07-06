@@ -27,10 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InfoEscola">
-        </activity>
+        <activity android:name=".InfoEscola"></activity>
 
-        <receiver android:name="InternetChecker">
+        <receiver android:name=".InternetChecker">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -41,6 +40,8 @@
         <provider
             android:name=".BDProvider"
             android:authorities="dspm.dc.ufc.br.eduview.provider.bd" />
+
+        <activity android:name=".ListEscolas"></activity>
     </application>
 
 </manifest>

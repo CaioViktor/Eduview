@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
-        
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id==R.id.nav_ranking) {
 
         } else if (id == R.id.nav_historico) {
-
+            callListEscolasActivity();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -267,5 +268,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this,InfoEscola.class);
         intent.putExtra("json", json);
         startActivity(intent);
+    }
+
+    public void callListEscolasActivity(){
+        Intent intent = new Intent(this,ListEscolas.class);
+        List<Pair<Escola,Boolean>> escolasResult = getAllEscolas();
+        List<String> escolas = new ArrayList<>();
+
+        for(Pair<Escola,Boolean> p : escolasResult){
+            escolas.add(p.first.getJsonConstructor());
+        }
+
+        intent.putExtra("escolas", (Serializable) escolas);
+
+        startActivity(intent);
+
+
+    }
+
+
+    public List<Pair<Escola,Boolean>> getAllEscolas(){
+        List<Pair<Escola,Boolean>> result = new ArrayList<>();
+
+        String URL = BDProvider.URL_ESCOLAS;
+        Uri escolasUri = Uri.parse(URL);
+
+        Cursor cursor = getContentResolver().query(escolasUri,null,null,null,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Escola e = new Escola(cursor.getString(cursor.getColumnIndex(Escola.JSON_ESCOLA)));
+                int notificacoes = cursor.getInt(cursor.getColumnIndex("notificacoes"));
+                Boolean b;
+                if (notificacoes == 0) {
+                    b = new Boolean(false);
+                } else {
+                    b = new Boolean(true);
+                }
+                result.add(new Pair<Escola, Boolean>(e, b));
+
+            } while (cursor.moveToNext());
+        }
+
+
+        return result;
     }
 }
