@@ -34,7 +34,8 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 api = Api(app)
 
-connection_string = "host='localhost' dbname='EduView' user='postgres' password='admin'"
+#connection_string = "host='localhost' dbname='EduView' user='postgres' password='admin'"
+connection_string = "host='localhost' dbname='teste' user='postgres' password='014526'"
 conn = psycopg2.connect(connection_string)
 
 
@@ -204,11 +205,13 @@ class usuarios(Resource):
         except:
         	return {'codigo':1}
         sql = 'INSERT INTO public."Usuario" (username,password,nome,email) VALUES('+"'"+usuario['username']+"','"+usuario['password']+"','"+usuario['nome']+"','"+usuario['email']+"')"
+        print sql
         cursor = conn.cursor()
         try:
        	        cursor.execute(sql)
 	        conn.commit()
         except:
+        	print 'rollback'
         	conn.rollback()	
         	return {'codigo':1}
         closeCursor(cursor)

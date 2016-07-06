@@ -25,6 +25,10 @@ public class CadastroUsuarioFragment extends DialogFragment implements AlertDial
     private Button botao;
     private Server server;
     private Handler handler = new Handler();
+    private LoginFragment login;
+    public CadastroUsuarioFragment(LoginFragment loginFragment){
+        login = loginFragment;
+    }
     @Override
     public Dialog onCreateDialog(Bundle bundle){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -60,8 +64,8 @@ public class CadastroUsuarioFragment extends DialogFragment implements AlertDial
                     if(!nome.getText().toString().equals("")){
                         if(password.getText().toString().equals(passwordConfirma.getText().toString())){
                             Usuario usuario = new Usuario(0,username.getText().toString(),password.getText().toString(),nome.getText().toString(),email.getText().toString());
-                            Log.i("LOGP",usuario.toJson());
-                            server.POST(Server.HTTP+Server.HOST+Server.PORT+"/usuarios/u",usuario.toJson());
+                            Log.i("LOGP",usuario.toJson()+"\n"+Server.HTTP+Server.HOST+Server.PORT+"/usuario/u");
+                            server.POST(Server.HTTP + Server.HOST + Server.PORT + "/usuario/u", usuario.toJson());
                         }else{
                             passwordConfirma.setError("Senhas não batem");
                         }
@@ -88,6 +92,7 @@ public class CadastroUsuarioFragment extends DialogFragment implements AlertDial
             else{
                 Toast.makeText(getActivity().getApplicationContext(),"Usuário cadastrado com sucesso",Toast.LENGTH_LONG);
                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                login.confirmaCadastro(username.getText().toString(),password.getText().toString());
             }
         }catch(Exception e){
             e.printStackTrace();

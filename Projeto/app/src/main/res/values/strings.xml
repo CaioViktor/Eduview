@@ -22,6 +22,8 @@
     <string name="cadastro_nome">Nome:</string>
     <string name="cadastro_email">Email:</string>
     <string name="cadastro_cadastrar">Cadastrar</string>
+    <string name="login_logar">Logar</string>
+    <string name="login_cadastrar"><u>Cadastrar</u></string>
 
     <string name="MENU_Cadastro">Login/Cadastro</string>
     <string name="MENU_Buscar">Buscar</string>
