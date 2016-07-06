@@ -34,7 +34,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 api = Api(app)
 
-connection_string = "host='localhost' dbname='teste' user='postgres' password='014526'"
+connection_string = "host='localhost' dbname='EduView' user='postgres' password='admin'"
 conn = psycopg2.connect(connection_string)
 
 

@@ -3,6 +3,8 @@ package dspm.dc.ufc.br.eduview;
 import org.json.JSONObject;
 
 public class Escola {
+    public static final String ID_ESCOLA = "id_escola";
+    public static final String JSON_ESCOLA = "json";
 
     private String nome;
     private String rua;
@@ -418,6 +420,10 @@ public class Escola {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public void setJsonConstructor(String jsonConstructor) {
+        this.jsonConstructor = jsonConstructor;
     }
 
     public String getJsonConstructor() {

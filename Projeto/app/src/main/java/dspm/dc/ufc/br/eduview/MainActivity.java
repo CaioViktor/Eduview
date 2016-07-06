@@ -37,6 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import dspm.dc.ufc.br.eduview.bancodedados.BancoDeDados;
+import dspm.dc.ufc.br.eduview.bancodedados.EscolaBD;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     private GoogleMap map;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HashMap<LatLng,Escola> escolas = new HashMap<>();
     private LocationHelper lh;
     private ServerCallsHelper serverCallsHelper;
+    private BancoDeDados bd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
 
+        bd = new BancoDeDados(this);
+        //Escola escolaTeste = new Escola();
+        //escolaTeste.setPk_escola(12);
+        //escolaTeste.setJsonConstructor("Oe");
+        EscolaBD escBD = new EscolaBD(bd);
+        //escBD.create(escolaTeste);
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -142,8 +153,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         posicao = latLng;
         marcarMapa(posicao,getResources().getString(R.string.MAIN_MARKER_TEXT));
 
-        //Exemplo de requisição com filtro
-        serverCallsHelper.getEscolas(posicao,10,15);
+        int raio = 10;
+        int maximo = 20;
+        serverCallsHelper.getEscolas(posicao,raio,maximo);
 
     }
 
