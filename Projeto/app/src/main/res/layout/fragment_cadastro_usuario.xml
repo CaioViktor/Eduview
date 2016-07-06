@@ -1,0 +1,81 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="dspm.dc.ufc.br.eduview.CadastroUsuarioFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/size_label_cadastros"
+            android:text="@string/cadastro_username"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/cadastro_username"
+            android:hint="@string/cadastro_username"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/size_label_cadastros"
+            android:text="@string/cadastro_password"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/cadastro_password"
+            android:hint="@string/cadastro_password"
+            android:inputType="textPassword"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/size_label_cadastros"
+            android:text="@string/cadastro_password_confirma"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/cadastro_password_confirma"
+            android:hint="@string/cadastro_password_confirma"
+            android:inputType="textPassword"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/size_label_cadastros"
+            android:text="@string/cadastro_nome"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/cadastro_nome"
+            android:hint="@string/cadastro_nome"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/size_label_cadastros"
+            android:text="@string/cadastro_email"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/cadastro_email"
+            android:hint="@string/cadastro_email"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/cadastro_cadastrar"
+            android:id = "@+id/cadastro_botao"/>
+
+    </LinearLayout>
+
+</ScrollView>

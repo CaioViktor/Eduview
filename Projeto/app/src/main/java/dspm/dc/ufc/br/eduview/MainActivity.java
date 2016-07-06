@@ -80,12 +80,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
 
+
         bd = new BancoDeDados(this);
         //Escola escolaTeste = new Escola();
         //escolaTeste.setPk_escola(12);
         //escolaTeste.setJsonConstructor("Oe");
         EscolaBD escBD = new EscolaBD(bd);
         //escBD.create(escolaTeste);
+
+        CadastroUsuarioFragment fragment = new CadastroUsuarioFragment();
+        fragment.show(getSupportFragmentManager(),"Cadastro");
+
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {

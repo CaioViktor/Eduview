@@ -14,4 +14,14 @@
     <string name="GPS_DISABLED">Seu Serviço de Localização está desativado! A localização padrão (Campus do Pici) será carregada.</string>
     <string name="title_activity_info_escola">InfoEscola</string>
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="cadastro_username">Username:</string>
+    <string name="cadastro_password">Password:</string>
+    <string name="cadastro_password_confirma">Confirme o Password:</string>
+    <string name="cadastro_nome">Nome:</string>
+    <string name="cadastro_email">Email:</string>
+    <string name="cadastro_cadastrar">Cadastrar</string>
+
 </resources>
+
