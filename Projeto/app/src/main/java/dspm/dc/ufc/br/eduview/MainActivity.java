@@ -95,10 +95,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void logar(){
         if(preferences.getString(USUARIO,null) != null){
+
             usuario = new Usuario(preferences.getString(USUARIO,null));
-            ((TextView)navigationView.findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
-            ((TextView)navigationView.findViewById(R.id.email)).setText(usuario.getEmail());
-            navigationView.getMenu().findItem(R.id.nav_login).setTitle("Log out");
+
+            if( (navigationView.findViewById(R.id.nomeUsuario)!=null)
+                    && (navigationView.findViewById(R.id.email)!=null)
+                    && (navigationView.getMenu().findItem(R.id.nav_login)!=null)){
+
+                ((TextView)navigationView.findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
+                ((TextView)navigationView.findViewById(R.id.email)).setText(usuario.getEmail());
+                navigationView.getMenu().findItem(R.id.nav_login).setTitle("Log out");
+
+            }
+
+
+
         }
     }
 
@@ -220,7 +231,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-
+        if(usuario!=null){
+            ((TextView)navigationView.findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
+            ((TextView)navigationView.findViewById(R.id.email)).setText(usuario.getEmail());
+            navigationView.getMenu().findItem(R.id.nav_login).setTitle("Log out");
+            
+        }
         return true;
     }
 
