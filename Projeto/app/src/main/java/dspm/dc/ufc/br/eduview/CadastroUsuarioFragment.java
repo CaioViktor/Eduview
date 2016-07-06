@@ -41,7 +41,7 @@ public class CadastroUsuarioFragment extends DialogFragment implements AlertDial
         username = (EditText)view.findViewById(R.id.cadastro_username);
         password = (EditText)view.findViewById(R.id.cadastro_password);
         passwordConfirma = (EditText)view.findViewById(R.id.cadastro_password_confirma);
-        nome = (EditText)view.findViewById(R.id.cadastro_password_confirma);
+        nome = (EditText)view.findViewById(R.id.cadastro_nome);
         email = (EditText)view.findViewById(R.id.cadastro_email);
         botao = (Button)view.findViewById(R.id.cadastro_botao);
         botao.setOnClickListener(this);

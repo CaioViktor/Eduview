@@ -57,8 +57,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LocationHelper lh;
     private ServerCallsHelper serverCallsHelper;
     public static String USUARIO = "usuario";
+    NavigationView navigationView;
     private SharedPreferences preferences;
     private Usuario usuario;
+    //private Menu navMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //termina o gerado automaticamente
 
@@ -89,15 +91,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         preferences = getSharedPreferences(getString(R.string.app_name), 0);
         logar();
 
-
     }
 
     public void logar(){
         if(preferences.getString(USUARIO,null) != null){
             usuario = new Usuario(preferences.getString(USUARIO,null));
-            ((TextView)findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
-            ((TextView)findViewById(R.id.email)).setText(usuario.getEmail());
-            ((MenuItem)findViewById(R.id.nav_login)).setTitle("Log out");
+            ((TextView)navigationView.findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
+            ((TextView)navigationView.findViewById(R.id.email)).setText(usuario.getEmail());
+            navigationView.getMenu().findItem(R.id.nav_login).setTitle("Log out");
         }
     }
 
@@ -218,6 +219,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+
         return true;
     }
 
@@ -248,9 +251,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment.show(getFragmentManager(),"Cadastro");
             }else{
                 usuario = null;
-                ((TextView)findViewById(R.id.nomeUsuario)).setText("Usuário");
-                ((TextView)findViewById(R.id.email)).setText("e-mail");
-                ((MenuItem)findViewById(R.id.nav_login)).setTitle(getResources().getString(R.string.MENU_Cadastro));
+                ((TextView)navigationView.findViewById(R.id.nomeUsuario)).setText("Usuário");
+                ((TextView)navigationView.findViewById(R.id.email)).setText("e-mail");
+                navigationView.getMenu().findItem(R.id.nav_login).setTitle(getResources().getString(R.string.MENU_Cadastro));
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(MainActivity.USUARIO, null);
                 editor.commit();
@@ -340,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             } while (cursor.moveToNext());
         }
-
 
         return result;
     }
