@@ -3,33 +3,29 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_login"
+            android:icon="@drawable/user"
+            android:title="@string/MENU_Cadastro" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Escolas">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_buscar"
+                android:icon="@drawable/search"
+                android:title="@string/MENU_Buscar" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_filtrar"
+                android:icon="@drawable/filter"
+                android:title="@string/MENU_Filtrar" />
+            <item
+                android:id="@+id/nav_ranking"
+                android:icon="@drawable/ranking"
+                android:title="@string/MENU_Ranking" />
+            <item
+                android:id="@+id/nav_historico"
+                android:icon="@drawable/list"
+                android:title="@string/MENU_Historico" />
         </menu>
     </item>
 

@@ -23,5 +23,11 @@
     <string name="cadastro_email">Email:</string>
     <string name="cadastro_cadastrar">Cadastrar</string>
 
+    <string name="MENU_Cadastro">Login/Cadastro</string>
+    <string name="MENU_Buscar">Buscar</string>
+    <string name="MENU_Filtrar">Filtrar</string>
+    <string name="MENU_Ranking">Ranking</string>
+    <string name="MENU_Historico">Histórico de Escolas</string>
+
 </resources>
 

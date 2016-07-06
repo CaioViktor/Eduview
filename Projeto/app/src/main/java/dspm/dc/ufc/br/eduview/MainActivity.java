@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EscolaBD escBD = new EscolaBD(bd);
         //escBD.create(escolaTeste);
 
-        CadastroUsuarioFragment fragment = new CadastroUsuarioFragment();
-        fragment.show(getSupportFragmentManager(),"Cadastro");
 
     }
     @Override
@@ -132,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
-
             @Override
             public void onInfoWindowClick(Marker marker) {
 
@@ -234,17 +231,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_login) {
+            CadastroUsuarioFragment fragment = new CadastroUsuarioFragment();
+            fragment.show(getSupportFragmentManager(),"Cadastro");
+        } else if (id == R.id.nav_buscar) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_filtrar) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id==R.id.nav_ranking) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_historico) {
 
         }
 
