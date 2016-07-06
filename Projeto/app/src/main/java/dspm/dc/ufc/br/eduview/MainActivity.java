@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
 
+        CadastroUsuarioFragment fragment = new CadastroUsuarioFragment();
+        fragment.show(getSupportFragmentManager(),"Cadastro");
+
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
