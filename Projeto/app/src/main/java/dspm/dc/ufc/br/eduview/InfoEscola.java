@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -24,8 +25,9 @@ public class InfoEscola extends AppCompatActivity {
         setContentView(R.layout.activity_info_escola);
 
         ScrollView sv = (ScrollView) findViewById(R.id.scrollViewInfo);
+        HorizontalScrollView hsv = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
         GridLayout gl = new GridLayout(this);
-        sv.addView(gl);
+        hsv.addView(gl);
 
 
         Intent intent = getIntent();
