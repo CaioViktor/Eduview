@@ -1,12 +1,15 @@
 package dspm.dc.ufc.br.eduview;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -39,9 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import dspm.dc.ufc.br.eduview.bancodedados.BancoDeDados;
-import dspm.dc.ufc.br.eduview.bancodedados.EscolaBD;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     private GoogleMap map;
 
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HashMap<LatLng,Escola> escolas = new HashMap<>();
     private LocationHelper lh;
     private ServerCallsHelper serverCallsHelper;
-    private BancoDeDados bd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
-
-
-        bd = new BancoDeDados(this);
-        //Escola escolaTeste = new Escola();
-        //escolaTeste.setPk_escola(12);
-        //escolaTeste.setJsonConstructor("Oe");
-        EscolaBD escBD = new EscolaBD(bd);
-        //escBD.create(escolaTeste);
-
-
+        
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {

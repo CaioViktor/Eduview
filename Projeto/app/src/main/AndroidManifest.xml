@@ -37,6 +37,10 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name=".BDProvider"
+            android:authorities="dspm.dc.ufc.br.eduview.provider.bd" />
     </application>
 
 </manifest>
