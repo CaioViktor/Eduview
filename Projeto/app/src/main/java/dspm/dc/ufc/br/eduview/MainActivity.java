@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -44,7 +45,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,FazLogin {
     private GoogleMap map;
 
     private int defaultZoom = 14;
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HashMap<LatLng,Escola> escolas = new HashMap<>();
     private LocationHelper lh;
     private ServerCallsHelper serverCallsHelper;
+    public static String USUARIO = "usuario";
+    private SharedPreferences preferences;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         serverCallsHelper = new ServerCallsHelper(this);
         posicao = null;
+
+        preferences = getSharedPreferences(getString(R.string.app_name), 0);
+        logar();
+
+
     }
+
+    public void logar(){
+        if(preferences.getString(USUARIO,null) != null){
+            usuario = new Usuario(preferences.getString(USUARIO,null));
+            ((TextView)findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
+            ((TextView)findViewById(R.id.email)).setText(usuario.getEmail());
+            ((MenuItem)findViewById(R.id.nav_login)).setTitle("Log out");
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //mapinha carregado e feliz
@@ -142,13 +162,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void setarPosicao(LatLng latLng){
         map.clear();
-        Log.i("MainActivity","Entrou no setarPosicao");
+        Log.i("MainActivity", "Entrou no setarPosicao");
         posicao = latLng;
-        marcarMapa(posicao,getResources().getString(R.string.MAIN_MARKER_TEXT));
+        marcarMapa(posicao, getResources().getString(R.string.MAIN_MARKER_TEXT));
 
         int raio = 10;
         int maximo = 20;
-        serverCallsHelper.getEscolas(posicao,raio,maximo);
+        serverCallsHelper.getEscolas(posicao, raio, maximo);
 
     }
 
@@ -223,8 +243,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_login) {
-            CadastroUsuarioFragment fragment = new CadastroUsuarioFragment();
-            fragment.show(getSupportFragmentManager(),"Cadastro");
+            if(usuario == null){
+                LoginFragment fragment = new LoginFragment(this);
+                fragment.show(getFragmentManager(),"Cadastro");
+            }else{
+                usuario = null;
+                ((TextView)findViewById(R.id.nomeUsuario)).setText("Usuário");
+                ((TextView)findViewById(R.id.email)).setText("e-mail");
+                ((MenuItem)findViewById(R.id.nav_login)).setTitle(getResources().getString(R.string.MENU_Cadastro));
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(MainActivity.USUARIO, null);
+                editor.commit();
+
+            }
         } else if (id == R.id.nav_buscar) {
 
         } else if (id == R.id.nav_filtrar) {

@@ -7,4 +7,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="size_label_cadastros">20dp</dimen>
+    <dimen name="size_label_login_cadastrar">12dp</dimen>
 </resources>
