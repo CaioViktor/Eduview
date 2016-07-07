@@ -1,12 +1,21 @@
 package dspm.dc.ufc.br.eduview;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class InfoEscola extends AppCompatActivity {
 
@@ -18,11 +27,19 @@ public class InfoEscola extends AppCompatActivity {
             "Parque infantil","Biblioteca","Número de salas","Alimentação","Água","Energia",
             "Internet","Quantidade de computadores "};
 
+    public Dialog dialog;
+    public RatingBar rb;
+    EditText avaliarT;
+
+    private Server server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_escola);
+
+        server = new Server(this);
+        dialog = new Dialog(InfoEscola.this);
 
         ScrollView sv = (ScrollView) findViewById(R.id.scrollViewInfo);
         HorizontalScrollView hsv = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
@@ -58,5 +75,52 @@ public class InfoEscola extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void avaliarEscola(View view) {
+        dialog.setTitle("Avalie aqui!");
+        dialog.setContentView(R.layout.dialog_avaliar);
+        dialog.show();
+
+        final Button avaliar = (Button) dialog.findViewById(R.id.botãoAvaliar);
+        Button cancelar = (Button) dialog.findViewById(R.id.botaoCancelar);
+
+        avaliar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                avaliarT = (EditText) dialog.findViewById(R.id.textoAvaliar);
+                String texto = avaliarT.getText().toString();
+
+                rb = (RatingBar) dialog.findViewById(R.id.ratingBar);
+                float nota = rb.getRating();
+
+                String data = getDateTime();
+
+                Avaliacao avaliacao = new Avaliacao(escola.getPk_escola(), , texto, data, nota);
+
+                server.POST(Server.HTTP + Server.HOST + Server.PORT + "/avaliação/ideescola/limite/deslocamento",
+                        avaliacao.toJson());
+
+            }
+
+        });
+
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
+    }
+
+    public void listarAvaliacoes(View view) {
+    }
+
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }
