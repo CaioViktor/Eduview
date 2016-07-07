@@ -97,7 +97,7 @@ public class LoginFragment extends DialogFragment implements AlertDialog.OnClick
         try{
             JSONObject object = new JSONObject(response);
             if(object.has("codigo") && object.getInt("codigo") == 1)
-                Toast.makeText(getActivity().getApplicationContext(), "Usuário não cadastrado", Toast.LENGTH_LONG);
+                Toast.makeText(getActivity().getApplicationContext(), "Usuário não cadastrado", Toast.LENGTH_LONG).show();
             else{
                 if(object.has("1")){
                     Usuario usuario = new Usuario(object.getString("1"));
@@ -110,7 +110,7 @@ public class LoginFragment extends DialogFragment implements AlertDialog.OnClick
                         context.logar();
                     }
                     else{
-                        Toast.makeText(getActivity().getApplicationContext(), "Usuário ou senha incorretos", Toast.LENGTH_LONG);
+                        Toast.makeText(getActivity().getApplicationContext(), "Usuário ou senha incorretos", Toast.LENGTH_LONG).show();
                     }
                 }
             }

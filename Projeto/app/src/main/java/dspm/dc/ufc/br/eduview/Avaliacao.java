@@ -16,7 +16,7 @@ public class Avaliacao {
     public static final String ID_USUARIO = "id_usuario";
     public static final String TEXTO = "texto";
     public static final String DATA = "data";
-    public static final String NOTA = "nota";
+    public static final String NOTA = "avaliacao";
     public static final String JSON = "json";
 
     public Avaliacao(int id_escola, int id_usuario, String texto, String data, String nota){

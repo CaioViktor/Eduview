@@ -17,9 +17,9 @@ import java.net.URL;
  * Created by caio on 29/05/16.
  */
 public class Server implements ObservableServer{
-    public final static String HOST = "10.0.2.2";
+    public final static String HOST = "192.168.0.107";
     //public final static String HOST = "192.168.1.6";
-    public final static String PORT = ":5000";
+    public final static String PORT = ":5001";
     public final static String HTTP = "http://";
     private ObserverServer chamador;
     private Context context;

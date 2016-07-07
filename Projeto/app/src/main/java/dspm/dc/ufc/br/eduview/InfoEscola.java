@@ -2,6 +2,7 @@ package dspm.dc.ufc.br.eduview;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -18,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -114,13 +116,24 @@ public class InfoEscola extends AppCompatActivity {
 
 
     public void avaliarEscola(View view) {
-        avaliarFragment = new AvaliarFragment(this);
-        avaliarFragment.show(getFragmentManager(),"Avalie aqui!");
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.app_name), 0);
+        if(preferences.getString(MainActivity.USUARIO,null) != null){
+            Usuario usuario = new Usuario(preferences.getString(MainActivity.USUARIO,null));
+            avaliarFragment = new AvaliarFragment(this,escola,usuario);
+            avaliarFragment.show(getFragmentManager(),"Avalie aqui!");
+        }else{
+            Toast.makeText(getApplicationContext(),"Você deve estar logado.",Toast.LENGTH_SHORT).show();
+        }
 
 
     }
 
     public void listarAvaliacoes(View view) {
+
+        Intent i = new Intent(this,ListarAvaliacoesActivity.class);
+        i.putExtra(Escola.ID_ESCOLA,escola.getPk_escola());
+
+        startActivity(i);
     }
 
 

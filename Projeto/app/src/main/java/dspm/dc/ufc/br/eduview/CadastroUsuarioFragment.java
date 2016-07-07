@@ -88,9 +88,9 @@ public class CadastroUsuarioFragment extends DialogFragment implements AlertDial
         try{
             JSONObject object = new JSONObject(response);
             if(object.has("codigo") && object.getInt("codigo") == 1)
-                Toast.makeText(getActivity().getApplicationContext(),"Erro ao cadastrar usuário",Toast.LENGTH_LONG);
+                Toast.makeText(getActivity().getApplicationContext(),"Erro ao cadastrar usuário",Toast.LENGTH_LONG).show();
             else{
-                Toast.makeText(getActivity().getApplicationContext(),"Usuário cadastrado com sucesso",Toast.LENGTH_LONG);
+                Toast.makeText(getActivity().getApplicationContext(),"Usuário cadastrado com sucesso",Toast.LENGTH_LONG).show();
                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 login.confirmaCadastro(username.getText().toString(),password.getText().toString());
             }

@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_keyLucas" />
+            android:value="@string/google_maps_keyCaio" />
 
         <activity
             android:name=".MainActivity"
@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InfoEscola"></activity>
+        <activity android:name=".InfoEscola" />
 
         <receiver android:name=".InternetChecker">
             <intent-filter>
@@ -41,7 +41,8 @@
             android:name=".BDProvider"
             android:authorities="dspm.dc.ufc.br.eduview.provider.bd" />
 
-        <activity android:name=".ListEscolas"></activity>
+        <activity android:name=".ListEscolas" />
+        <activity android:name=".ListarAvaliacoesActivity"></activity>
     </application>
 
 </manifest>
