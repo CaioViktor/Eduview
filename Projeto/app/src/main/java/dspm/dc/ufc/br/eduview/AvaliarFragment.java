@@ -3,9 +3,11 @@ package dspm.dc.ufc.br.eduview;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -26,6 +28,10 @@ public class AvaliarFragment extends DialogFragment implements AlertDialog.OnCli
     Escola escola;
     Usuario usuario;
     Handler handler = new Handler();
+    float nota;
+    String texto;
+    String data;
+    Avaliacao avaliacao;
 
     public AvaliarFragment(Context c,Escola e,Usuario usuario){
         callerContext = c;
@@ -49,12 +55,12 @@ public class AvaliarFragment extends DialogFragment implements AlertDialog.OnCli
 
         builder.setPositiveButton("Enviar",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                float nota = rb.getRating();
-                String texto = avaliarT.getText().toString();
-                String data = (new EscolaStorageHelper(callerContext)).getDataAtual();
+                nota = rb.getRating();
+                texto = avaliarT.getText().toString();
+                data = (new EscolaStorageHelper(callerContext)).getDataAtual();
 
                 Log.i("AvaliarFragment","Informações inseridas são:\n\tNota: "+nota+"\n\tComentario: "+texto+"\n\tData: "+data);
-                Avaliacao avaliacao = new Avaliacao(escola.getPk_escola(),usuario.getId_usuario(),texto,data,nota+"");
+                avaliacao = new Avaliacao(escola.getPk_escola(),usuario.getId_usuario(),texto,data,nota+"");
                 server.POST(Server.HTTP+Server.HOST+Server.PORT+"/avaliacao/"+escola.getPk_escola()+"/1/1",avaliacao.toJson());
 
             }
@@ -76,6 +82,13 @@ public class AvaliarFragment extends DialogFragment implements AlertDialog.OnCli
         try{
             JSONObject object = new JSONObject(response);
             if(object.has("codigo") && object.getInt("codigo") == 1){
+                if(object.has("mensagem") && object.getString("mensagem").equals("Você não está conectado a rede")){
+                    Toast.makeText(callerContext.getApplicationContext(),"Você não está conectado. A Avaliação será enviada quando a rede estiver disponível.",Toast.LENGTH_LONG).show();
+
+                    ContentValues values = new ContentValues();
+                    values.put(Avaliacao.JSON,avaliacao.toJson());
+                    Uri uri = callerContext.getContentResolver().insert(BDProvider.CONTENT_URI_AVALIACOES,values);
+                }
                 Toast.makeText(callerContext.getApplicationContext(),"Erro ao avaliar no servidor",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(callerContext.getApplicationContext(),"Avaliação feita com sucesso",Toast.LENGTH_LONG).show();
