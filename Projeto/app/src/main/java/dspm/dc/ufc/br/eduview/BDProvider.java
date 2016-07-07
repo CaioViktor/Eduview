@@ -15,7 +15,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BDProvider extends ContentProvider{
     static final String PROVIDER_NAME = "dspm.dc.ufc.br.eduview.provider.bd";
@@ -40,13 +42,14 @@ public class BDProvider extends ContentProvider{
 
     private SQLiteDatabase database;
     static final String DATABASE_NAME = "EduView.db";
-    static final int DATABASE_VERSION = 3;
+    static final int DATABASE_VERSION = 6;
 
     static final String ESCOLA_TABLE_NAME = "escolas";
     static final String CREATE_DB_TABLE_ESCOLAS = "create table " + ESCOLA_TABLE_NAME +
             " ("+ Escola.ID_ESCOLA +" integer primary key," +
             Escola.JSON_ESCOLA+" text," +
-            "notificacoes integer )";
+            EscolaStorageItem.NOTIFICACOES+" integer, " +
+            EscolaStorageItem.DATA_ULTIMA_VERIFICACAO+" text )";
 
     static final String AVALIACOES_TABLE_NAME = "avaliacoes";
     static final String CREATE_DB_TABLE_AVALIACOES = "create table " + AVALIACOES_TABLE_NAME +

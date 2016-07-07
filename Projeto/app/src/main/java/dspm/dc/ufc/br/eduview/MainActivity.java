@@ -1,7 +1,6 @@
 package dspm.dc.ufc.br.eduview;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,13 +8,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -235,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ((TextView)navigationView.findViewById(R.id.nomeUsuario)).setText(usuario.getNome());
             ((TextView)navigationView.findViewById(R.id.email)).setText(usuario.getEmail());
             navigationView.getMenu().findItem(R.id.nav_login).setTitle("Log out");
-            
+
         }
         return true;
     }
@@ -322,11 +319,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void callListEscolasActivity(){
         Intent intent = new Intent(this,ListEscolas.class);
-        List<Pair<Escola,Boolean>> escolasResult = getAllEscolas();
+        EscolaStorageHelper esh = new EscolaStorageHelper(this);
+        List<EscolaStorageItem> escolasResult = esh.getAllEscolas();
         List<String> escolas = new ArrayList<>();
 
-        for(Pair<Escola,Boolean> p : escolasResult){
-            escolas.add(p.first.getJsonConstructor());
+        for(EscolaStorageItem eh : escolasResult){
+            escolas.add(eh.getEscola().getJsonConstructor());
         }
 
         intent.putExtra("escolas", (Serializable) escolas);
@@ -336,30 +334,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-    public List<Pair<Escola,Boolean>> getAllEscolas(){
-        List<Pair<Escola,Boolean>> result = new ArrayList<>();
-
-        String URL = BDProvider.URL_ESCOLAS;
-        Uri escolasUri = Uri.parse(URL);
-
-        Cursor cursor = getContentResolver().query(escolasUri,null,null,null,null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Escola e = new Escola(cursor.getString(cursor.getColumnIndex(Escola.JSON_ESCOLA)));
-                int notificacoes = cursor.getInt(cursor.getColumnIndex("notificacoes"));
-                Boolean b;
-                if (notificacoes == 0) {
-                    b = new Boolean(false);
-                } else {
-                    b = new Boolean(true);
-                }
-                result.add(new Pair<Escola, Boolean>(e, b));
-
-            } while (cursor.moveToNext());
-        }
-
-        return result;
-    }
 }

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import dspm.dc.ufc.br.eduview.BDProvider;
 import dspm.dc.ufc.br.eduview.Escola;
+import dspm.dc.ufc.br.eduview.EscolaStorageItem;
 import dspm.dc.ufc.br.eduview.MainActivity;
 import dspm.dc.ufc.br.eduview.Server;
 
@@ -73,7 +74,8 @@ public class CallEscolasProximas extends ServerCall{
             ContentValues values = new ContentValues();
             values.put(Escola.ID_ESCOLA,e.getPk_escola());
             values.put(Escola.JSON_ESCOLA,e.getJsonConstructor());
-            values.put("notificacoes",0);
+            values.put(EscolaStorageItem.NOTIFICACOES,0);
+            values.put(EscolaStorageItem.DATA_ULTIMA_VERIFICACAO,"null");
             Uri uri = callerContext.getContentResolver().insert(BDProvider.CONTENT_URI_ESCOLAS, values);
 
             //Marcar no mapa:

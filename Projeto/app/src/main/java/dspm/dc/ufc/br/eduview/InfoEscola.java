@@ -3,14 +3,21 @@ package dspm.dc.ufc.br.eduview;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class InfoEscola extends AppCompatActivity {
 
     private Escola escola;
+    private boolean escolaMarcada;
+    EscolaStorageHelper esh;
+
     private String[] tag = {"Nome","Rua","Numero","Bairro","Cep","DDD","Telefone","Email",
             "Situação","Prédio próprio","Acessibilidade","Rede","Atendimento Especializado ",
             "Refeitório","Auditório","Laboratório Informatica","Laboratório Ciências",
@@ -24,6 +31,8 @@ public class InfoEscola extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_escola);
 
+        esh = new EscolaStorageHelper(this);
+
         ScrollView sv = (ScrollView) findViewById(R.id.scrollViewInfo);
         HorizontalScrollView hsv = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
         GridLayout gl = new GridLayout(this);
@@ -35,6 +44,9 @@ public class InfoEscola extends AppCompatActivity {
         if(intent != null){
             String json = intent.getStringExtra("json");
             escola = new Escola(json);
+            escolaMarcada = isEscolaMarcada();
+
+            ((Switch)findViewById(R.id.marcadorSwitch)).setChecked(escolaMarcada);
 
             String[] info = escola.getAll();
 
@@ -59,4 +71,26 @@ public class InfoEscola extends AppCompatActivity {
             }
         }
     }
+
+    private boolean isEscolaMarcada(){
+
+        List<EscolaStorageItem> escolasResult = esh.getAllEscolas();
+
+        for(EscolaStorageItem esi: escolasResult){
+            if((escola.getPk_escola() == esi.getEscola().getPk_escola()) && esi.isNotificacoes()){
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+    public void clickSwitchMarcar(View v){
+        escolaMarcada = !escolaMarcada;
+        esh.setEscolaMarcada(escola,escolaMarcada);
+    }
+
+
+
 }

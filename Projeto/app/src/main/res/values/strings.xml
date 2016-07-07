@@ -31,5 +31,7 @@
     <string name="MENU_Ranking">Ranking</string>
     <string name="MENU_Historico">Histórico de Escolas</string>
 
+    <string name="marcadoLabel">Receber notificações de novas avaliações </string>
+
 </resources>
 

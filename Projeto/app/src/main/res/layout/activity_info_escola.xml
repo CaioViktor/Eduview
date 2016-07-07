@@ -10,6 +10,15 @@
     tools:context="dspm.dc.ufc.br.eduview.InfoEscola"
     android:orientation="vertical">
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/marcadoLabel"
+        android:id="@+id/marcadorSwitch"
+        android:layout_marginBottom="10dp"
+        android:onClick="clickSwitchMarcar"
+        android:checked="false" />
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,4 +29,5 @@
             android:layout_height="wrap_content"
             android:id="@+id/horizontalScrollView" />
     </ScrollView>
+
 </LinearLayout>
