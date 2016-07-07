@@ -52,8 +52,8 @@ public class EscolaStorageHelper {
         int notificar = 0;
         if(marcada){notificar = 1;}
         values.put(EscolaStorageItem.NOTIFICACOES,notificar);
-        Calendar c = Calendar.getInstance();
-        String dataAtual = ""+c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DAY_OF_MONTH);
+
+        String dataAtual = getDataAtual();
         values.put(EscolaStorageItem.DATA_ULTIMA_VERIFICACAO,dataAtual);
 
         Uri escolasURI = Uri.parse(BDProvider.URL_ESCOLAS);
@@ -61,6 +61,12 @@ public class EscolaStorageHelper {
         int count = callerContext.getContentResolver().update(escolasURI,values,selector,null);
 
         Log.i("EscolaStorageHelper","Resultado do update: count="+count);
+
+    }
+
+    public String getDataAtual(){
+        Calendar c = Calendar.getInstance();
+        return ""+c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DAY_OF_MONTH);
 
     }
 
