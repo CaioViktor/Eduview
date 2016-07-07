@@ -19,6 +19,27 @@
         android:onClick="clickSwitchMarcar"
         android:checked="false" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avaliar escola"
+            android:id="@+id/botãoAvaliar"
+            android:onClick="avaliarEscola" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Listar avaliações"
+            android:id="@+id/botãoListar"
+            android:onClick="listarAvaliacoes" />
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
