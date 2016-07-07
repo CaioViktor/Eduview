@@ -273,12 +273,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         } else if (id == R.id.nav_buscar) {
-
-        } else if (id == R.id.nav_filtrar) {
-
-        } else if (id==R.id.nav_ranking) {
-
-        } else if (id == R.id.nav_historico) {
+            Intent intent = new Intent(this,BuscaActivity.class);
+            startActivity(intent);
+        }   else if (id == R.id.nav_historico) {
             callListEscolasActivity();
         }
 
