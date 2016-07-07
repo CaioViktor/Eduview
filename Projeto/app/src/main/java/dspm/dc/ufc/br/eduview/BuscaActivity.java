@@ -42,7 +42,7 @@ public class BuscaActivity extends AppCompatActivity implements ObserverServer{
                 // Do your task here
                 JSONObject object = new JSONObject();
                 try {
-                    object.put("where","AND UPPER(e.nome) LIKE '%"+query.toUpperCase()+"%'");
+                    object.put("where","WHERE UPPER(e.nome) LIKE '%"+query.toUpperCase()+"%'");
                     server.POST(Server.HTTP + Server.HOST + Server.PORT + "/escola/nome/100/0", object.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
