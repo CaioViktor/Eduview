@@ -69,8 +69,8 @@ public class AvaliacaoListAdapter extends BaseAdapter{
         //pega os dados da lista e define os valores nos itens:
         Avaliacao item = itens.get(position);
         float nota = (float) (Integer.valueOf(item.getNota()));
-        itemHolder.nota.setMax(10);
-        itemHolder.nota.setNumStars((int)nota);
+        itemHolder.nota.setRating(nota);
+        itemHolder.nota.setEnabled(false);
 
         itemHolder.comentario.setText(item.getTexto());
 
